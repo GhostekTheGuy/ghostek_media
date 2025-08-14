@@ -28,19 +28,19 @@ const MainFooterContent = ({ scrollProgress }: { scrollProgress: any }) => {
   return (
     <motion.div style={{ y: contentY, opacity: contentOpacity }} className="bg-black relative z-10 min-h-screen">
       {/* Main Contact Section */}
-      <div className="max-w-[1440px] mx-auto px-6 py-20">
+      <div className="max-w-[1440px] mx-auto px-3 py-10 md:px-6 md:py-20">
         {/* Hero Message */}
-        <div className="text-center mb-20">
+        <div className="text-center mb-10 md:mb-20">
           <BlurText
             text="DON'T THINK."
-            className="text-6xl md:text-8xl lg:text-9xl font-bold text-red-500 leading-none tracking-tight mb-4"
+            className="text-4xl md:text-8xl lg:text-9xl font-bold text-red-500 leading-none tracking-tight mb-4"
             delay={100}
             animateBy="words"
             direction="top"
           />
           <BlurText
             text="JUST MESSAGE ME."
-            className="text-6xl md:text-8xl lg:text-9xl font-bold text-red-500 leading-none tracking-tight mb-8"
+            className="text-4xl md:text-8xl lg:text-9xl font-bold text-red-500 leading-none tracking-tight mb-8"
             delay={150}
             animateBy="words"
             direction="top"
@@ -51,7 +51,7 @@ const MainFooterContent = ({ scrollProgress }: { scrollProgress: any }) => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
             viewport={{ once: true }}
-            className="text-lg text-gray-300 mb-8 tracking-wide"
+            className="text-base md:text-lg text-gray-300 mb-8 tracking-wide"
           >
             Tell me about your idea, your vision, or just say hi.
           </motion.p>
@@ -67,18 +67,22 @@ const MainFooterContent = ({ scrollProgress }: { scrollProgress: any }) => {
         </div>
 
         {/* Contact Information Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-16 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16 mb-10 md:mb-20">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
-            className="space-y-4"
+            className="space-y-4 md:text-left text-center"
           >
-            <h3 className="text-2xl font-bold text-white tracking-wider">CONTACT</h3>
+            <h3 className="text-xl md:text-2xl font-bold text-white tracking-wider">CONTACT</h3>
             <div className="space-y-2 text-gray-300">
-              <p className="hover:text-red-400 transition-colors cursor-pointer">+48 888-106-559 </p>
-              <p className="hover:text-red-400 transition-colors cursor-pointer">{"GHOSTEK.KONTAKT@GMAIL.COM"}</p>
+              <p className="hover:text-red-400 transition-colors cursor-pointer text-sm md:text-base">
+                +48 888-106-559
+              </p>
+              <p className="hover:text-red-400 transition-colors cursor-pointer text-sm md:text-base">
+                GHOSTEK.KONTAKT@GMAIL.COM
+              </p>
             </div>
           </motion.div>
 
@@ -89,9 +93,9 @@ const MainFooterContent = ({ scrollProgress }: { scrollProgress: any }) => {
             viewport={{ once: true }}
             className="space-y-4"
           >
-            <h3 className="text-2xl font-bold text-white tracking-wider text-center">LOCATION</h3>
+            <h3 className="text-xl md:text-2xl font-bold text-white tracking-wider text-center">LOCATION</h3>
             <div className="space-y-2 text-gray-300">
-              <p className="hover:text-red-400 transition-colors text-center">LUBLIN, POLAND</p>
+              <p className="hover:text-red-400 transition-colors text-center text-sm md:text-base">LUBLIN, POLAND</p>
             </div>
           </motion.div>
 
@@ -100,12 +104,12 @@ const MainFooterContent = ({ scrollProgress }: { scrollProgress: any }) => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
             viewport={{ once: true }}
-            className="space-y-4 text-right"
+            className="space-y-4 text-center"
           >
-            <h3 className="text-2xl font-bold text-white tracking-wider">SOCIAL</h3>
+            <h3 className="text-xl md:text-2xl font-bold text-white tracking-wider">SOCIAL</h3>
             <div className="space-y-2 text-gray-300">
-              <p className="hover:text-red-400 transition-colors cursor-pointer">INSTAGRAM</p>
-              <p className="hover:text-red-400 transition-colors cursor-pointer">PINTEREST</p>
+              <p className="hover:text-red-400 transition-colors cursor-pointer text-sm md:text-base">INSTAGRAM</p>
+              <p className="hover:text-red-400 transition-colors cursor-pointer text-sm md:text-base">PINTEREST</p>
             </div>
           </motion.div>
         </div>
@@ -117,7 +121,7 @@ const MainFooterContent = ({ scrollProgress }: { scrollProgress: any }) => {
             whileInView={{ opacity: 0.1, y: 0 }}
             transition={{ duration: 1.2, delay: 0.3 }}
             viewport={{ once: true }}
-            className="text-[6rem] md:text-[8rem] lg:text-[10rem] xl:text-[12rem] leading-none text-center select-none whitespace-nowrap font-black text-white tracking-[-0.075em]"
+            className="text-[3rem] md:text-[8rem] lg:text-[10rem] xl:text-[12rem] leading-none text-center select-none whitespace-nowrap font-black text-white tracking-[-0.075em]"
             style={{ fontFamily: "var(--font-space-grotesk)" }}
           >
             HUBERT KOLEJKO
@@ -130,7 +134,7 @@ const MainFooterContent = ({ scrollProgress }: { scrollProgress: any }) => {
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.8 }}
           viewport={{ once: true }}
-          className="text-center pt-10 border-t border-red-500/20 mt-20"
+          className="text-center pt-10 border-t border-red-500/20 mt-10 md:mt-20"
         >
           <p className="text-gray-500 text-sm tracking-wider">© 2024 HUBERT KOLEJKO. ALL RIGHTS RESERVED.</p>
         </motion.div>

@@ -55,7 +55,7 @@ export default function AboutSection() {
             transition={{ duration: 1.2, ease: "easeOut" }}
             viewport={{ once: true, margin: "-100px" }}
             style={{ y: leftImageY }}
-            className="absolute left-0 top-0 w-80 h-96"
+            className="absolute left-0 top-0 w-80 h-96 hidden md:block"
           >
             <img
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-rLPCcRRyohHLNDEAJzlNZLWEqAUjgk.png"
@@ -70,7 +70,7 @@ export default function AboutSection() {
             transition={{ duration: 1.2, delay: 0.2, ease: "easeOut" }}
             viewport={{ once: true, margin: "-100px" }}
             style={{ y: bottomImageY }}
-            className="absolute left-4 bottom-0 w-48 h-64"
+            className="absolute left-4 bottom-0 w-48 h-64 hidden md:block"
           >
             <img
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-0WxaYxD4DRrqfjAkSf5JXljQMrznyg.png"
@@ -85,7 +85,7 @@ export default function AboutSection() {
             transition={{ duration: 1.2, delay: 0.1, ease: "easeOut" }}
             viewport={{ once: true, margin: "-100px" }}
             style={{ y: rightImageY }}
-            className="absolute right-0 top-8 w-64 h-80"
+            className="absolute right-0 top-8 w-64 h-80 hidden md:block"
           >
             <img
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-2MDKu22jTS5sxRkfUc4dUJYRP0JFUD.png"
@@ -100,7 +100,7 @@ export default function AboutSection() {
             transition={{ duration: 1.2, delay: 0.3, ease: "easeOut" }}
             viewport={{ once: true, margin: "-100px" }}
             style={{ y: rightBottomImageY }}
-            className="absolute right-16 bottom-4 w-56 h-72"
+            className="absolute right-16 bottom-4 w-56 h-72 hidden md:block"
           >
             <img
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-QggPtCkMr563w3DTSE8isHOpAbDM8X.png"
@@ -109,26 +109,30 @@ export default function AboutSection() {
             />
           </motion.div>
 
-          <motion.div style={{ y: textY }} className="text-center max-w-2xl mx-auto px-8">
-            <h2 className="text-white text-3xl font-light leading-tight mb-12 md:text-4xl">
-              <motion.span style={{ opacity: textPart1Opacity }}>
-                {
-                  "I'm Hubert Kolejko, a Product Designer & Full Stack Developer. In addition to my graphic design background, I also develop fullstack applications,"
-                }
-              </motion.span>
-              <motion.span style={{ opacity: textPart2Opacity }}>
-                {
-                  " combining my eye for detail with technical skills in frontend and backend development. This blend of creativity and coding allows me to"
-                }
-              </motion.span>
-              <motion.span style={{ opacity: textPart3Opacity }}>
-                {" build visually appealing and user-friendly digital experiences that truly connect with users."}
-              </motion.span>
-            </h2>
+          <motion.div style={{ y: textY }} className="text-center max-w-2xl mx-auto px-4 md:px-8 relative">
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm rounded-2xl md:hidden" />
 
-            <motion.div style={{ opacity: buttonOpacity, y: buttonY }}>
-              <Button href="/works">SEE MY WORKS</Button>
-            </motion.div>
+            <div className="relative z-10 py-8 md:py-0">
+              <h2 className="text-white text-2xl md:text-3xl lg:text-4xl font-light leading-tight mb-8 md:mb-12">
+                <motion.span style={{ opacity: textPart1Opacity }}>
+                  {
+                    "I'm Hubert Kolejko, a Product Designer & Full Stack Developer. In addition to my graphic design background, I also develop fullstack applications,"
+                  }
+                </motion.span>
+                <motion.span style={{ opacity: textPart2Opacity }}>
+                  {
+                    " combining my eye for detail with technical skills in frontend and backend development. This blend of creativity and coding allows me to"
+                  }
+                </motion.span>
+                <motion.span style={{ opacity: textPart3Opacity }}>
+                  {" build visually appealing and user-friendly digital experiences that truly connect with users."}
+                </motion.span>
+              </h2>
+
+              <motion.div style={{ opacity: buttonOpacity, y: buttonY }}>
+                <Button href="/works">SEE MY WORKS</Button>
+              </motion.div>
+            </div>
           </motion.div>
         </div>
       </div>
