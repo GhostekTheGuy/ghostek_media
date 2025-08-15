@@ -1,18 +1,24 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { GeistSans } from "geist/font/sans"
-import { Space_Grotesk } from "next/font/google"
+import { Geist } from "next/font/google"
+import { Manrope } from "next/font/google"
 import "./globals.css"
-import SmoothScroll from "@/components/SmoothScroll"
 
-const spaceGrotesk = Space_Grotesk({
+const geist = Geist({
   subsets: ["latin"],
-  variable: "--font-space-grotesk",
+  variable: "--font-geist",
+  display: "swap",
+})
+
+const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-manrope",
+  display: "swap",
 })
 
 export const metadata: Metadata = {
-  title: "v0 App",
-  description: "Created with v0",
+  title: "WENTRA Portfolio",
+  description: "Modern portfolio with sophisticated image management",
   generator: "v0.dev",
 }
 
@@ -22,19 +28,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <head>
-        <style>{`
-html {
-  font-family: ${GeistSans.style.fontFamily};
-  --font-sans: ${GeistSans.variable};
-  --font-space-grotesk: ${spaceGrotesk.style.fontFamily};
-}
-        `}</style>
-      </head>
-      <body className={`${spaceGrotesk.variable} font-sans`}>
-        <SmoothScroll>{children}</SmoothScroll>
-      </body>
+    <html lang="en" className={`${geist.variable} ${manrope.variable} antialiased`}>
+      <body className="font-sans">{children}</body>
     </html>
   )
 }
