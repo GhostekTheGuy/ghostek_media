@@ -46,7 +46,7 @@ export default function HeroSection() {
         {/* Hero Section */}
         <div id="hero-section" className="min-h-screen relative cursor-none">
           {/* 3D Marquee Background */}
-          <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0 opacity-15">
             <ThreeDMarquee images={images} className="h-full w-full rounded-none" />
           </div>
 

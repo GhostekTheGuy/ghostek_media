@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import BlurText from "@/components/ui/blur-text"
 import Footer from "@/components/Footer"
@@ -8,41 +8,7 @@ import { ChevronRight } from "lucide-react"
 import Navbar from "@/components/Navbar"
 import PageTransition from "@/components/PageTransition"
 import ProjectModal from "@/components/ProjectModal"
-
-const portfolioProjects = [
-  {
-    id: 1,
-    title: "WENTRA",
-    subtitle: "MARKETING AGENCY",
-    category: "branding",
-    mainImage: "/wentra-logo-branding.png",
-    subImages: ["/wentra-ai-typography.png", "/wentra-laptop-mockup.png", "/wentra-business-cards.png"],
-  },
-  {
-    id: 2,
-    title: "Pacantara",
-    subtitle: "OUTDOOR BRAND",
-    category: "branding",
-    mainImage: "/pacantara-brand-landscape.png",
-    subImages: ["/pacantara-shopping-bag.png", "/pacantara-gallery-exhibition.png", "/pacantara-altura-jacket.png"],
-  },
-  {
-    id: 3,
-    title: "Harman West",
-    subtitle: "BRAND IDENTITY",
-    category: "branding",
-    mainImage: "/harman-west-architecture.png",
-    subImages: ["/harman-west-brand-identity.png", "/harman-west-logo-grid.png", "/harman-west-documents.png"],
-  },
-  {
-    id: 4,
-    title: "INGO",
-    subtitle: "TECH SOLUTIONS",
-    category: "tech",
-    mainImage: "/ingo-tech-robot-detail.png",
-    subImages: ["/ingo-tech-poster.png", "/ingo-robots-beyond-limits.png", "/ingo-employee-badges.png"],
-  },
-]
+import { fetchProjects, type Project } from "@/lib/projects"
 
 const ProjectComponent = ({ project, hoveredItem, setHoveredItem, onProjectClick }: any) => {
   return (
@@ -60,7 +26,7 @@ const ProjectComponent = ({ project, hoveredItem, setHoveredItem, onProjectClick
       >
         <div
           className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-          style={{ backgroundImage: `url(${project.mainImage})` }}
+          style={{ backgroundImage: `url(${project.main_image})` }}
         />
 
         <div className="absolute inset-0 bg-black/40 group-hover:bg-black/60 transition-all duration-500" />
@@ -82,7 +48,7 @@ const ProjectComponent = ({ project, hoveredItem, setHoveredItem, onProjectClick
                 x: hoveredItem === project.id ? 0 : -10,
               }}
               transition={{ duration: 0.3 }}
-              className="bg-white p-4"
+              className="bg-white p-4 rounded-lg"
             >
               <ChevronRight className="w-6 h-6 text-black" />
             </motion.div>
@@ -99,7 +65,7 @@ const ProjectComponent = ({ project, hoveredItem, setHoveredItem, onProjectClick
 
       {/* Three small squares underneath */}
       <div className="grid grid-cols-3 gap-4">
-        {project.subImages.map((image: string, index: number) => (
+        {project.sub_images.map((image: string, index: number) => (
           <motion.div
             key={`${project.id}-sub-${index}`}
             initial={{ opacity: 0, y: 30 }}
@@ -126,7 +92,7 @@ const ProjectComponent = ({ project, hoveredItem, setHoveredItem, onProjectClick
                   x: hoveredItem === `${project.id}-sub-${index}` ? 0 : -10,
                 }}
                 transition={{ duration: 0.3 }}
-                className="bg-white p-2 self-end"
+                className="bg-white p-2 self-end rounded-md"
               >
                 <ChevronRight className="w-4 h-4 text-black" />
               </motion.div>
@@ -149,6 +115,27 @@ export default function WorksPage() {
   const [hoveredItem, setHoveredItem] = useState<string | number | null>(null)
   const [selectedProject, setSelectedProject] = useState<any>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [projects, setProjects] = useState<Project[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const loadProjects = async () => {
+      try {
+        setLoading(true)
+        const fetchedProjects = await fetchProjects()
+        setProjects(fetchedProjects)
+        setError(null)
+      } catch (err) {
+        console.error("Failed to load projects:", err)
+        setError("Failed to load projects. Please try again later.")
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadProjects()
+  }, [])
 
   const handleProjectClick = (project: any, startImageIndex = 0) => {
     setSelectedProject({ ...project, startImageIndex })
@@ -188,24 +175,50 @@ export default function WorksPage() {
         {/* Portfolio Gallery */}
         <div className="px-6 pb-20">
           <div className="max-w-[1440px] mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-              {portfolioProjects.map((project) => (
-                <ProjectComponent
-                  key={project.id}
-                  project={project}
-                  hoveredItem={hoveredItem}
-                  setHoveredItem={setHoveredItem}
-                  onProjectClick={handleProjectClick}
-                />
-              ))}
-            </div>
+            {loading && (
+              <div className="flex justify-center items-center py-20">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+              </div>
+            )}
+
+            {error && (
+              <div className="text-center py-20">
+                <p className="text-red-400 text-lg">{error}</p>
+                <button
+                  onClick={() => window.location.reload()}
+                  className="mt-4 px-6 py-2 bg-white text-black rounded-lg hover:bg-gray-200 transition-colors"
+                >
+                  Retry
+                </button>
+              </div>
+            )}
+
+            {!loading && !error && projects.length === 0 && (
+              <div className="text-center py-20">
+                <p className="text-gray-400 text-lg">No projects found.</p>
+              </div>
+            )}
+
+            {!loading && !error && projects.length > 0 && (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+                {projects.map((project) => (
+                  <ProjectComponent
+                    key={project.id}
+                    project={project}
+                    hoveredItem={hoveredItem}
+                    setHoveredItem={setHoveredItem}
+                    onProjectClick={handleProjectClick}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
         <Footer />
 
         {/* ProjectModal component */}
-        <ProjectModal isOpen={isModalOpen} onClose={handleCloseModal} project={selectedProject} />
+        {isModalOpen && <ProjectModal isOpen={isModalOpen} onClose={handleCloseModal} project={selectedProject} />}
       </div>
     </PageTransition>
   )
