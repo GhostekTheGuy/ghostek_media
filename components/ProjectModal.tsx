@@ -12,8 +12,8 @@ interface ProjectModalProps {
     title: string
     subtitle: string
     category: string
-    mainImage: string
-    subImages: string[]
+    main_image: string
+    sub_images: string[]
     startImageIndex?: number
   } | null
 }
@@ -88,7 +88,7 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
 
   if (!project) return null
 
-  const allImages = [project.mainImage, ...project.subImages]
+  const allImages = [project.main_image, ...(project.sub_images || [])]
 
   return (
     <AnimatePresence>
