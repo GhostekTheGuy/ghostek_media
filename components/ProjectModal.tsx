@@ -59,7 +59,6 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
 
     const handleWheel = (e: WheelEvent) => {
       e.stopPropagation()
-      // Allow natural scrolling within the container
     }
 
     container.addEventListener("scroll", handleScroll, { passive: true })
@@ -86,7 +85,6 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
 
   const scrollToTop = () => {
     if (scrollContainerRef.current) {
-      console.log("[v0] Scrolling to top with smooth behavior")
       scrollContainerRef.current.scrollTo({
         top: 0,
         behavior: "smooth",
@@ -102,7 +100,6 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop with blur */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -113,7 +110,6 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
             onWheel={(e) => e.stopPropagation()}
           />
 
-          {/* Modal Content */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -134,7 +130,6 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
                 <X className="w-5 h-5 text-white group-hover:text-gray-200 transition-colors" />
               </button>
 
-              {/* Project Info Header */}
               <div className="p-6 bg-gradient-to-b from-black to-transparent relative z-10 flex-shrink-0">
                 <h2 className="text-3xl font-bold text-white mb-2">{project.title}</h2>
                 <p className="text-lg text-gray-300 mb-2">{project.subtitle}</p>
@@ -145,8 +140,8 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
                 ref={scrollContainerRef}
                 className="flex-1 overflow-y-auto focus:outline-none modal-scroll-container"
                 style={{
-                  scrollbarWidth: "none", // Firefox
-                  msOverflowStyle: "none", // IE and Edge
+                  scrollbarWidth: "none",
+                  msOverflowStyle: "none",
                   scrollBehavior: "smooth",
                 }}
                 tabIndex={0}
@@ -192,4 +187,3 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
     </AnimatePresence>
   )
 }
-</merged_code>
