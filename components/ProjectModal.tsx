@@ -86,6 +86,7 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
 
   const scrollToTop = () => {
     if (scrollContainerRef.current) {
+      console.log("[v0] Scrolling to top with smooth behavior")
       scrollContainerRef.current.scrollTo({
         top: 0,
         behavior: "smooth",
@@ -146,6 +147,7 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
                 style={{
                   scrollbarWidth: "none", // Firefox
                   msOverflowStyle: "none", // IE and Edge
+                  scrollBehavior: "smooth",
                 }}
                 tabIndex={0}
               >
@@ -190,3 +192,4 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
     </AnimatePresence>
   )
 }
+</merged_code>
