@@ -1,40 +1,12 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { del, put } from "@vercel/blob"
-
-const PROJECTS_FILE = "projects.json"
-
-async function getProjects() {
-  try {
-    const response = await fetch(`https://blob.vercel-storage.com/${PROJECTS_FILE}`, {
-      headers: {
-        Authorization: `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}`,
-      },
-    })
-
-    if (response.ok) {
-      const data = await response.json()
-      return data.projects || []
-    }
-  } catch (error) {
-    console.log("No existing projects file")
-  }
-  return []
-}
-
-async function saveProjects(projects: any[]) {
-  const data = JSON.stringify({ projects }, null, 2)
-  await put(PROJECTS_FILE, data, {
-    access: "private",
-    token: process.env.BLOB_READ_WRITE_TOKEN,
-  })
-}
+import { del } from "@vercel/blob"
+import { getProjectById, updateProject, deleteProject, type UpdateProjectData } from "@/lib/database"
 
 // GET - Fetch single project
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const projectId = Number.parseInt(params.id)
-    const projects = await getProjects()
-    const project = projects.find((p) => p.id === projectId)
+    const project = await getProjectById(projectId)
 
     if (!project) {
       return NextResponse.json({ error: "Project not found" }, { status: 404 })
@@ -52,29 +24,24 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   try {
     const projectId = Number.parseInt(params.id)
     const body = await request.json()
-    const { title, subtitle, category, mainImage, subImages, additionalImages } = body
+    const { title, subtitle, category, main_image, sub_images, additional_images } = body
 
-    const projects = await getProjects()
-    const projectIndex = projects.findIndex((p) => p.id === projectId)
+    const updateData: UpdateProjectData = {}
 
-    if (projectIndex === -1) {
+    if (title !== undefined) updateData.title = title
+    if (subtitle !== undefined) updateData.subtitle = subtitle
+    if (category !== undefined) updateData.category = category
+    if (main_image !== undefined) updateData.main_image = main_image
+    if (sub_images !== undefined) updateData.sub_images = sub_images
+    if (additional_images !== undefined) updateData.additional_images = additional_images
+
+    const updatedProject = await updateProject(projectId, updateData)
+
+    if (!updatedProject) {
       return NextResponse.json({ error: "Project not found" }, { status: 404 })
     }
 
-    projects[projectIndex] = {
-      ...projects[projectIndex],
-      title: title || projects[projectIndex].title,
-      subtitle: subtitle !== undefined ? subtitle : projects[projectIndex].subtitle,
-      category: category || projects[projectIndex].category,
-      mainImage: mainImage || projects[projectIndex].mainImage,
-      subImages: subImages || projects[projectIndex].subImages,
-      additionalImages: additionalImages || projects[projectIndex].additionalImages,
-      updatedAt: new Date().toISOString(),
-    }
-
-    await saveProjects(projects)
-
-    return NextResponse.json({ project: projects[projectIndex] })
+    return NextResponse.json({ project: updatedProject })
   } catch (error) {
     console.error("Error updating project:", error)
     return NextResponse.json({ error: "Failed to update project" }, { status: 500 })
@@ -85,16 +52,15 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const projectId = Number.parseInt(params.id)
-    const projects = await getProjects()
-    const projectIndex = projects.findIndex((p) => p.id === projectId)
 
-    if (projectIndex === -1) {
+    const project = await getProjectById(projectId)
+
+    if (!project) {
       return NextResponse.json({ error: "Project not found" }, { status: 404 })
     }
 
-    const project = projects[projectIndex]
-
-    const allImages = [project.mainImage, ...project.subImages, ...project.additionalImages]
+    // Clean up images from Blob storage
+    const allImages = [project.main_image, ...project.sub_images, ...project.additional_images]
     for (const imageUrl of allImages) {
       if (imageUrl.includes("blob.vercel-storage.com")) {
         try {
@@ -107,8 +73,11 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       }
     }
 
-    projects.splice(projectIndex, 1)
-    await saveProjects(projects)
+    const deleted = await deleteProject(projectId)
+
+    if (!deleted) {
+      return NextResponse.json({ error: "Failed to delete project" }, { status: 500 })
+    }
 
     return NextResponse.json({ message: "Project deleted successfully" })
   } catch (error) {

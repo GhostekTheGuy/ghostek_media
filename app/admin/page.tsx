@@ -11,18 +11,18 @@ interface ProjectFormData {
   title: string
   subtitle: string
   category: string
-  mainImage: string
-  subImages: string[]
-  additionalImages: string[]
+  main_image: string
+  sub_images: string[]
+  additional_images: string[]
 }
 
 const initialFormData: ProjectFormData = {
   title: "",
   subtitle: "",
   category: "",
-  mainImage: "",
-  subImages: ["", "", ""],
-  additionalImages: [],
+  main_image: "",
+  sub_images: ["", "", ""],
+  additional_images: [],
 }
 
 export default function AdminPage() {
@@ -56,17 +56,17 @@ export default function AdminPage() {
       const imageUrl = await uploadImage(file)
 
       if (imageUrl) {
-        if (field === "mainImage") {
-          setFormData((prev) => ({ ...prev, mainImage: imageUrl }))
-        } else if (field === "subImages" && index !== undefined) {
+        if (field === "main_image") {
+          setFormData((prev) => ({ ...prev, main_image: imageUrl }))
+        } else if (field === "sub_images" && index !== undefined) {
           setFormData((prev) => ({
             ...prev,
-            subImages: prev.subImages.map((img, i) => (i === index ? imageUrl : img)),
+            sub_images: prev.sub_images.map((img, i) => (i === index ? imageUrl : img)),
           }))
-        } else if (field === "additionalImages") {
+        } else if (field === "additional_images") {
           setFormData((prev) => ({
             ...prev,
-            additionalImages: [...prev.additionalImages, imageUrl],
+            additional_images: [...prev.additional_images, imageUrl],
           }))
         }
       }
@@ -80,7 +80,7 @@ export default function AdminPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!formData.title || !formData.mainImage) {
+    if (!formData.title || !formData.main_image) {
       alert("Title and main image are required")
       return
     }
@@ -114,9 +114,9 @@ export default function AdminPage() {
       title: project.title,
       subtitle: project.subtitle,
       category: project.category,
-      mainImage: project.mainImage,
-      subImages: [...project.subImages, "", "", ""].slice(0, 3),
-      additionalImages: project.additionalImages,
+      main_image: project.main_image,
+      sub_images: [...project.sub_images, "", "", ""].slice(0, 3),
+      additional_images: project.additional_images,
     })
     setShowForm(true)
   }
@@ -143,7 +143,7 @@ export default function AdminPage() {
   const removeAdditionalImage = (index: number) => {
     setFormData((prev) => ({
       ...prev,
-      additionalImages: prev.additionalImages.filter((_, i) => i !== index),
+      additional_images: prev.additional_images.filter((_, i) => i !== index),
     }))
   }
 
@@ -176,7 +176,7 @@ export default function AdminPage() {
                 animate={{ opacity: 1, y: 0 }}
                 className="bg-white rounded-lg shadow-md overflow-hidden"
               >
-                <div className="h-48 bg-cover bg-center" style={{ backgroundImage: `url(${project.mainImage})` }} />
+                <div className="h-48 bg-cover bg-center" style={{ backgroundImage: `url(${project.main_image})` }} />
                 <div className="p-4">
                   <h3 className="font-bold text-lg mb-1">{project.title}</h3>
                   <p className="text-gray-600 text-sm mb-2">{project.subtitle}</p>
@@ -256,16 +256,16 @@ export default function AdminPage() {
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Main Image *</label>
                       <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
-                        {formData.mainImage ? (
+                        {formData.main_image ? (
                           <div className="relative">
                             <img
-                              src={formData.mainImage || "/placeholder.svg"}
+                              src={formData.main_image || "/placeholder.svg"}
                               alt="Main"
                               className="w-full h-48 object-cover rounded"
                             />
                             <button
                               type="button"
-                              onClick={() => setFormData((prev) => ({ ...prev, mainImage: "" }))}
+                              onClick={() => setFormData((prev) => ({ ...prev, main_image: "" }))}
                               className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600"
                             >
                               <X className="w-4 h-4" />
@@ -275,17 +275,17 @@ export default function AdminPage() {
                           <label className="cursor-pointer block text-center">
                             <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
                             <span className="text-gray-600">
-                              {uploading === "mainImage" ? "Uploading..." : "Click to upload main image"}
+                              {uploading === "main_image" ? "Uploading..." : "Click to upload main image"}
                             </span>
                             <input
                               type="file"
                               accept="image/*"
                               onChange={(e) => {
                                 const file = e.target.files?.[0]
-                                if (file) handleImageUpload(file, "mainImage")
+                                if (file) handleImageUpload(file, "main_image")
                               }}
                               className="hidden"
-                              disabled={uploading === "mainImage"}
+                              disabled={uploading === "main_image"}
                             />
                           </label>
                         )}
@@ -296,7 +296,7 @@ export default function AdminPage() {
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Sub Images (3 images)</label>
                       <div className="grid grid-cols-3 gap-4">
-                        {formData.subImages.map((image, index) => (
+                        {formData.sub_images.map((image, index) => (
                           <div key={index} className="border-2 border-dashed border-gray-300 rounded-lg p-2">
                             {image ? (
                               <div className="relative">
@@ -310,7 +310,7 @@ export default function AdminPage() {
                                   onClick={() =>
                                     setFormData((prev) => ({
                                       ...prev,
-                                      subImages: prev.subImages.map((img, i) => (i === index ? "" : img)),
+                                      sub_images: prev.sub_images.map((img, i) => (i === index ? "" : img)),
                                     }))
                                   }
                                   className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full hover:bg-red-600"
@@ -322,17 +322,17 @@ export default function AdminPage() {
                               <label className="cursor-pointer block text-center h-24 flex flex-col justify-center">
                                 <Upload className="w-4 h-4 mx-auto mb-1 text-gray-400" />
                                 <span className="text-xs text-gray-600">
-                                  {uploading === `subImages-${index}` ? "Uploading..." : "Upload"}
+                                  {uploading === `sub_images-${index}` ? "Uploading..." : "Upload"}
                                 </span>
                                 <input
                                   type="file"
                                   accept="image/*"
                                   onChange={(e) => {
                                     const file = e.target.files?.[0]
-                                    if (file) handleImageUpload(file, "subImages", index)
+                                    if (file) handleImageUpload(file, "sub_images", index)
                                   }}
                                   className="hidden"
-                                  disabled={uploading === `subImages-${index}`}
+                                  disabled={uploading === `sub_images-${index}`}
                                 />
                               </label>
                             )}
@@ -347,7 +347,7 @@ export default function AdminPage() {
                         Additional Images (for modal gallery)
                       </label>
                       <div className="grid grid-cols-4 gap-4 mb-4">
-                        {formData.additionalImages.map((image, index) => (
+                        {formData.additional_images.map((image, index) => (
                           <div key={index} className="relative">
                             <img
                               src={image || "/placeholder.svg"}
@@ -366,16 +366,16 @@ export default function AdminPage() {
                       </div>
                       <label className="cursor-pointer inline-flex items-center gap-2 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors">
                         <Upload className="w-4 h-4" />
-                        {uploading === "additionalImages" ? "Uploading..." : "Add More Images"}
+                        {uploading === "additional_images" ? "Uploading..." : "Add More Images"}
                         <input
                           type="file"
                           accept="image/*"
                           onChange={(e) => {
                             const file = e.target.files?.[0]
-                            if (file) handleImageUpload(file, "additionalImages")
+                            if (file) handleImageUpload(file, "additional_images")
                           }}
                           className="hidden"
-                          disabled={uploading === "additionalImages"}
+                          disabled={uploading === "additional_images"}
                         />
                       </label>
                     </div>
@@ -393,7 +393,7 @@ export default function AdminPage() {
                 </button>
                 <button
                   type="submit"
-                  disabled={saving || !formData.title || !formData.mainImage}
+                  disabled={saving || !formData.title || !formData.main_image}
                   className="flex items-center gap-2 bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Save className="w-4 h-4" />

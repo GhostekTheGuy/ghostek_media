@@ -1,81 +1,10 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { put } from "@vercel/blob"
-
-const PROJECTS_FILE = "projects.json"
-
-async function getProjects() {
-  try {
-    const response = await fetch(`https://blob.vercel-storage.com/${PROJECTS_FILE}`, {
-      headers: {
-        Authorization: `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}`,
-      },
-    })
-
-    if (response.ok) {
-      const data = await response.json()
-      return data.projects || []
-    }
-  } catch (error) {
-    console.log("No existing projects file, starting with defaults")
-  }
-
-  // Return default projects if file doesn't exist
-  return [
-    {
-      id: 1,
-      title: "WENTRA",
-      subtitle: "MARKETING AGENCY",
-      category: "branding",
-      mainImage: "/wentra-logo-branding.png",
-      subImages: ["/wentra-ai-typography.png", "/wentra-laptop-mockup.png", "/wentra-business-cards.png"],
-      additionalImages: [],
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: 2,
-      title: "Pacantara",
-      subtitle: "OUTDOOR BRAND",
-      category: "branding",
-      mainImage: "/pacantara-brand-landscape.png",
-      subImages: ["/pacantara-shopping-bag.png", "/pacantara-gallery-exhibition.png", "/pacantara-altura-jacket.png"],
-      additionalImages: [],
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: 3,
-      title: "Harman West",
-      subtitle: "BRAND IDENTITY",
-      category: "branding",
-      mainImage: "/harman-west-architecture.png",
-      subImages: ["/harman-west-brand-identity.png", "/harman-west-logo-grid.png", "/harman-west-documents.png"],
-      additionalImages: [],
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: 4,
-      title: "INGO",
-      subtitle: "TECH SOLUTIONS",
-      category: "tech",
-      mainImage: "/ingo-tech-robot-detail.png",
-      subImages: ["/ingo-tech-poster.png", "/ingo-robots-beyond-limits.png", "/ingo-employee-badges.png"],
-      additionalImages: [],
-      createdAt: new Date().toISOString(),
-    },
-  ]
-}
-
-async function saveProjects(projects: any[]) {
-  const data = JSON.stringify({ projects }, null, 2)
-  await put(PROJECTS_FILE, data, {
-    access: "private",
-    token: process.env.BLOB_READ_WRITE_TOKEN,
-  })
-}
+import { getAllProjects, createProject, type CreateProjectData } from "@/lib/database"
 
 // GET - Fetch all projects
 export async function GET() {
   try {
-    const projects = await getProjects()
+    const projects = await getAllProjects()
     return NextResponse.json({ projects })
   } catch (error) {
     console.error("Error fetching projects:", error)
@@ -87,27 +16,22 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { title, subtitle, category, mainImage, subImages, additionalImages } = body
+    const { title, subtitle, category, main_image, sub_images, additional_images } = body
 
-    if (!title || !mainImage) {
+    if (!title || !main_image) {
       return NextResponse.json({ error: "Title and main image are required" }, { status: 400 })
     }
 
-    const projects = await getProjects()
-
-    const newProject = {
-      id: Math.max(...projects.map((p) => p.id), 0) + 1,
+    const projectData: CreateProjectData = {
       title,
       subtitle: subtitle || "",
       category: category || "uncategorized",
-      mainImage,
-      subImages: subImages || [],
-      additionalImages: additionalImages || [],
-      createdAt: new Date().toISOString(),
+      main_image,
+      sub_images: sub_images || [],
+      additional_images: additional_images || [],
     }
 
-    projects.push(newProject)
-    await saveProjects(projects)
+    const newProject = await createProject(projectData)
 
     return NextResponse.json({ project: newProject }, { status: 201 })
   } catch (error) {

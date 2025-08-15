@@ -26,7 +26,7 @@ const ProjectComponent = ({ project, hoveredItem, setHoveredItem, onProjectClick
       >
         <div
           className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-          style={{ backgroundImage: `url(${project.mainImage})` }}
+          style={{ backgroundImage: `url(${project.main_image})` }}
         />
 
         <div className="absolute inset-0 bg-black/40 group-hover:bg-black/60 transition-all duration-500" />
@@ -65,7 +65,7 @@ const ProjectComponent = ({ project, hoveredItem, setHoveredItem, onProjectClick
 
       {/* Three small squares underneath */}
       <div className="grid grid-cols-3 gap-4">
-        {project.subImages.map((image: string, index: number) => (
+        {project.sub_images.map((image: string, index: number) => (
           <motion.div
             key={`${project.id}-sub-${index}`}
             initial={{ opacity: 0, y: 30 }}

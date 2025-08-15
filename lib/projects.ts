@@ -3,11 +3,11 @@ export interface Project {
   title: string
   subtitle: string
   category: string
-  mainImage: string
-  subImages: string[]
-  additionalImages: string[]
-  createdAt: string
-  updatedAt?: string
+  main_image: string
+  sub_images: string[]
+  additional_images: string[]
+  created_at: string
+  updated_at: string
 }
 
 export async function fetchProjects(): Promise<Project[]> {
@@ -28,7 +28,9 @@ export async function fetchProjects(): Promise<Project[]> {
   }
 }
 
-export async function createProject(projectData: Omit<Project, "id" | "createdAt">): Promise<Project | null> {
+export async function createProject(
+  projectData: Omit<Project, "id" | "created_at" | "updated_at">,
+): Promise<Project | null> {
   try {
     const response = await fetch("/api/projects", {
       method: "POST",
