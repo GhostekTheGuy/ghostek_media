@@ -215,7 +215,23 @@ export default function AdminPage() {
                 </button>
               </div>
 
-              <div className="flex-1 overflow-y-auto">
+              <div
+                className="flex-1 overflow-y-auto modal-scroll-container focus:outline-none"
+                style={{
+                  scrollbarWidth: "none",
+                  msOverflowStyle: "none",
+                  scrollBehavior: "smooth",
+                }}
+                tabIndex={0}
+                onWheel={(e) => {
+                  e.stopPropagation()
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Escape") {
+                    handleCloseForm()
+                  }
+                }}
+              >
                 <div className="p-6">
                   <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Basic Info */}
