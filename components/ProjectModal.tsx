@@ -176,7 +176,7 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
                     exit={{ opacity: 0, scale: 0.8 }}
                     transition={{ duration: 0.2 }}
                     onClick={scrollToTop}
-                    className="absolute bottom-6 right-6 z-20 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full p-3 transition-colors duration-200 group"
+                    className="absolute bottom-6 right-6 z-20 hover:bg-white/20 backdrop-blur-sm rounded-full p-3 transition-colors duration-200 group bg-black"
                   >
                     <ChevronUp className="w-5 h-5 text-white group-hover:text-gray-200 transition-colors" />
                   </motion.button>
