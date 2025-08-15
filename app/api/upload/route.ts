@@ -10,9 +10,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 })
     }
 
-    // Upload to Vercel Blob
     const blob = await put(file.name, file, {
       access: "public",
+      token: process.env.BLOB_READ_WRITE_TOKEN,
     })
 
     return NextResponse.json({
