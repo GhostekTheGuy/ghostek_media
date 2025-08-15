@@ -88,3 +88,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Hide scrollbar in webkit browsers (Chrome, Safari, Edge) */
+.modal-scroll-container::-webkit-scrollbar {
+  display: none;
+}
