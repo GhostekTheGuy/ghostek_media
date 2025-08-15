@@ -5,18 +5,13 @@ export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData()
     const file = formData.get("file") as File
-    const category = (formData.get("category") as string) || "gallery"
 
     if (!file) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 })
     }
 
-    // Create a unique filename with category prefix
-    const timestamp = Date.now()
-    const filename = `${category}/${timestamp}-${file.name}`
-
     // Upload to Vercel Blob
-    const blob = await put(filename, file, {
+    const blob = await put(file.name, file, {
       access: "public",
     })
 
@@ -25,7 +20,6 @@ export async function POST(request: NextRequest) {
       filename: file.name,
       size: file.size,
       type: file.type,
-      category,
     })
   } catch (error) {
     console.error("Upload error:", error)
