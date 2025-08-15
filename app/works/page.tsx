@@ -1,13 +1,15 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import BlurText from "@/components/ui/blur-text"
 import Footer from "@/components/Footer"
-import { ChevronRight } from "lucide-react"
+import { ChevronRight, Settings } from "lucide-react"
 import Navbar from "@/components/Navbar"
 import PageTransition from "@/components/PageTransition"
 import ProjectModal from "@/components/ProjectModal"
+import ProjectManager from "@/components/ProjectManager"
+import { Button } from "@/components/ui/button"
 
 const portfolioProjects = [
   {
@@ -149,6 +151,36 @@ export default function WorksPage() {
   const [hoveredItem, setHoveredItem] = useState<string | number | null>(null)
   const [selectedProject, setSelectedProject] = useState<any>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [showManager, setShowManager] = useState(false)
+  const [dbProjects, setDbProjects] = useState<any[]>([])
+  const [displayProjects, setDisplayProjects] = useState(portfolioProjects)
+
+  useEffect(() => {
+    fetchDbProjects()
+  }, [])
+
+  const fetchDbProjects = async () => {
+    try {
+      const response = await fetch("/api/projects")
+      if (response.ok) {
+        const data = await response.json()
+        setDbProjects(data)
+
+        const convertedProjects = data.map((project: any) => ({
+          id: project.id,
+          title: project.title,
+          subtitle: project.description,
+          category: project.category,
+          mainImage: project.images[0]?.image_url || "/placeholder.svg?height=400&width=400",
+          subImages: project.images.slice(1, 4).map((img: any) => img.image_url) || [],
+        }))
+
+        setDisplayProjects([...portfolioProjects, ...convertedProjects])
+      }
+    } catch (error) {
+      console.error("Error fetching database projects:", error)
+    }
+  }
 
   const handleProjectClick = (project: any, startImageIndex = 0) => {
     setSelectedProject({ ...project, startImageIndex })
@@ -175,21 +207,36 @@ export default function WorksPage() {
         {/* Header Section */}
         <div className="px-6 pb-[100px] pt-[100px]">
           <div className="max-w-[1440px] mx-auto">
-            <BlurText
-              text="DIVE INTO MY WORKS"
-              className="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-none tracking-tight text-center"
-              delay={100}
-              animateBy="words"
-              direction="top"
-            />
+            <div className="flex justify-between items-center mb-8">
+              <BlurText
+                text="DIVE INTO MY WORKS"
+                className="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-none tracking-tight"
+                delay={100}
+                animateBy="words"
+                direction="top"
+              />
+              <Button onClick={() => setShowManager(!showManager)} className="bg-gray-800 hover:bg-gray-700 text-white">
+                <Settings className="w-4 h-4 mr-2" />
+                {showManager ? "Hide" : "Manage"} Projects
+              </Button>
+            </div>
           </div>
         </div>
+
+        {/* Conditional project manager */}
+        {showManager && (
+          <div className="px-6 pb-20">
+            <div className="max-w-[1440px] mx-auto">
+              <ProjectManager />
+            </div>
+          </div>
+        )}
 
         {/* Portfolio Gallery */}
         <div className="px-6 pb-20">
           <div className="max-w-[1440px] mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-              {portfolioProjects.map((project) => (
+              {displayProjects.map((project) => (
                 <ProjectComponent
                   key={project.id}
                   project={project}
