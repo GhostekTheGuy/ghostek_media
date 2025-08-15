@@ -1,8 +1,8 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect, useRef, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { X, ChevronLeft, ChevronRight } from "lucide-react"
+import { X, ChevronUp } from "lucide-react"
 
 interface ProjectModalProps {
   isOpen: boolean
@@ -14,20 +14,58 @@ interface ProjectModalProps {
     category: string
     mainImage: string
     subImages: string[]
+    startImageIndex?: number
   } | null
 }
 
 export default function ProjectModal({ isOpen, onClose, project }: ProjectModalProps) {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
-  const [allImages, setAllImages] = useState<string[]>([])
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const [showScrollTop, setShowScrollTop] = useState(false)
 
   useEffect(() => {
-    if (project) {
-      // Combine main image and sub images for navigation
-      setAllImages([project.mainImage, ...project.subImages])
-      setCurrentImageIndex(0)
+    if (isOpen) {
+      const scrollY = window.scrollY
+      document.body.style.position = "fixed"
+      document.body.style.top = `-${scrollY}px`
+      document.body.style.width = "100%"
+    } else {
+      document.body.style.position = ""
+      document.body.style.top = ""
+      document.body.style.width = ""
+      if (scrollY) {
+        window.scrollTo(0, Number.parseInt(scrollY || "0") * -1)
+      }
     }
-  }, [project])
+
+    return () => {
+      document.body.style.position = ""
+      document.body.style.top = ""
+      document.body.style.width = ""
+    }
+  }, [isOpen])
+
+  useEffect(() => {
+    const container = scrollContainerRef.current
+    if (!container || !isOpen) return
+
+    const handleWheel = (e: WheelEvent) => {
+      e.stopPropagation()
+      // Let the browser handle the scrolling naturally
+    }
+
+    const handleScroll = () => {
+      const scrollTop = container.scrollTop
+      setShowScrollTop(scrollTop > 200) // Show button after scrolling 200px
+    }
+
+    container.addEventListener("wheel", handleWheel, { passive: true })
+    container.addEventListener("scroll", handleScroll, { passive: true })
+
+    return () => {
+      container.removeEventListener("wheel", handleWheel)
+      container.removeEventListener("scroll", handleScroll)
+    }
+  }, [isOpen])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -35,26 +73,25 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
 
       if (e.key === "Escape") {
         onClose()
-      } else if (e.key === "ArrowLeft") {
-        goToPrevious()
-      } else if (e.key === "ArrowRight") {
-        goToNext()
       }
     }
 
     document.addEventListener("keydown", handleKeyDown)
     return () => document.removeEventListener("keydown", handleKeyDown)
-  }, [isOpen, currentImageIndex, allImages.length])
+  }, [isOpen, onClose])
 
-  const goToNext = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % allImages.length)
-  }
-
-  const goToPrevious = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + allImages.length) % allImages.length)
+  const scrollToTop = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      })
+    }
   }
 
   if (!project) return null
+
+  const allImages = [project.mainImage, ...project.subImages]
 
   return (
     <AnimatePresence>
@@ -68,6 +105,7 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
             transition={{ duration: 0.3 }}
             className="fixed inset-0 bg-black/80 backdrop-blur-md z-50"
             onClick={onClose}
+            onWheel={(e) => e.stopPropagation()}
           />
 
           {/* Modal Content */}
@@ -77,89 +115,73 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.3 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            onClick={onClose}
+            onWheel={(e) => e.stopPropagation()}
           >
             <div
-              className="relative max-w-6xl max-h-[90vh] w-full bg-black rounded-lg overflow-hidden"
+              className="relative max-w-4xl max-h-[90vh] w-full bg-black rounded-lg overflow-hidden flex flex-col"
               onClick={(e) => e.stopPropagation()}
+              onWheel={(e) => e.stopPropagation()}
             >
-              {/* Close Button */}
               <button
-                onClick={onClose}
-                className="absolute top-4 right-4 z-10 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full p-2 transition-colors duration-200"
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  onClose()
+                }}
+                className="absolute top-4 right-4 z-20 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full p-2 transition-colors duration-200"
               >
                 <X className="w-6 h-6 text-white" />
               </button>
 
-              {/* Image Counter */}
-              <div className="absolute top-4 left-4 z-10 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-                <span className="text-white text-sm font-medium">
-                  {currentImageIndex + 1} / {allImages.length}
-                </span>
-              </div>
-
-              {/* Main Image */}
-              <div className="relative aspect-video w-full">
-                <motion.img
-                  key={currentImageIndex}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3 }}
-                  src={allImages[currentImageIndex]}
-                  alt={`${project.title} - Image ${currentImageIndex + 1}`}
-                  className="w-full h-full object-cover"
-                />
-
-                {/* Navigation Arrows */}
-                {allImages.length > 1 && (
-                  <>
-                    <button
-                      onClick={goToPrevious}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full p-3 transition-colors duration-200"
-                    >
-                      <ChevronLeft className="w-6 h-6 text-white" />
-                    </button>
-                    <button
-                      onClick={goToNext}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full p-3 transition-colors duration-200"
-                    >
-                      <ChevronRight className="w-6 h-6 text-white" />
-                    </button>
-                  </>
-                )}
-              </div>
-
-              {/* Project Info */}
-              <div className="p-6 bg-gradient-to-t from-black to-transparent">
+              {/* Project Info Header */}
+              <div className="p-6 bg-gradient-to-b from-black to-transparent relative z-10">
                 <h2 className="text-3xl font-bold text-white mb-2">{project.title}</h2>
                 <p className="text-lg text-gray-300 mb-2">{project.subtitle}</p>
                 <span className="text-sm text-gray-400 uppercase tracking-wider">{project.category}</span>
               </div>
 
-              {/* Thumbnail Navigation */}
-              {allImages.length > 1 && (
-                <div className="p-4 bg-black/50">
-                  <div className="flex gap-2 justify-center overflow-x-auto">
-                    {allImages.map((image, index) => (
-                      <button
-                        key={index}
-                        onClick={() => setCurrentImageIndex(index)}
-                        className={`relative w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 transition-all duration-200 ${
-                          index === currentImageIndex
-                            ? "ring-2 ring-red-500 opacity-100"
-                            : "opacity-60 hover:opacity-80"
-                        }`}
-                      >
-                        <img
-                          src={image || "/placeholder.svg"}
-                          alt={`Thumbnail ${index + 1}`}
-                          className="w-full h-full object-cover"
-                        />
-                      </button>
-                    ))}
-                  </div>
+              <div
+                ref={scrollContainerRef}
+                className="flex-1 overflow-y-auto scrollbar-none focus:outline-none"
+                style={{
+                  scrollBehavior: "smooth",
+                  scrollbarWidth: "none",
+                  msOverflowStyle: "none",
+                }}
+              >
+                <div className="space-y-4 p-6 pt-0">
+                  {allImages.map((image, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: index * 0.1 }}
+                      className="w-full rounded-lg overflow-hidden"
+                    >
+                      <img
+                        src={image || "/placeholder.svg"}
+                        alt={`${project.title} - Image ${index + 1}`}
+                        className="w-full h-auto object-cover"
+                      />
+                    </motion.div>
+                  ))}
                 </div>
-              )}
+              </div>
+
+              <AnimatePresence>
+                {showScrollTop && (
+                  <motion.button
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    transition={{ duration: 0.2 }}
+                    onClick={scrollToTop}
+                    className="absolute bottom-6 right-6 z-20 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full p-3 transition-colors duration-200 group"
+                  >
+                    <ChevronUp className="w-5 h-5 text-white group-hover:text-gray-200 transition-colors" />
+                  </motion.button>
+                )}
+              </AnimatePresence>
             </div>
           </motion.div>
         </>

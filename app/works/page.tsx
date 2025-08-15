@@ -53,7 +53,7 @@ const ProjectComponent = ({ project, hoveredItem, setHoveredItem, onProjectClick
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         viewport={{ once: true }}
-        className="relative aspect-square overflow-hidden cursor-pointer group mb-4"
+        className="relative aspect-square overflow-hidden cursor-pointer group mb-4 rounded-xl"
         onMouseEnter={() => setHoveredItem(project.id)}
         onMouseLeave={() => setHoveredItem(null)}
         onClick={() => onProjectClick(project)}
@@ -106,7 +106,7 @@ const ProjectComponent = ({ project, hoveredItem, setHoveredItem, onProjectClick
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: index * 0.1 }}
             viewport={{ once: true }}
-            className="relative aspect-square overflow-hidden cursor-pointer group"
+            className="relative aspect-square overflow-hidden cursor-pointer group rounded-lg"
             onMouseEnter={() => setHoveredItem(`${project.id}-sub-${index}`)}
             onMouseLeave={() => setHoveredItem(null)}
             onClick={() => onProjectClick(project, index + 1)}
@@ -173,7 +173,7 @@ export default function WorksPage() {
         </div>
 
         {/* Header Section */}
-        <div className="pt-8 pb-12 px-6">
+        <div className="px-6 pb-[100px] pt-[100px]">
           <div className="max-w-[1440px] mx-auto">
             <BlurText
               text="DIVE INTO MY WORKS"

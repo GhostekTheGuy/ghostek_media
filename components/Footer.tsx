@@ -51,7 +51,7 @@ const MainFooterContent = ({ scrollProgress }: { scrollProgress: any }) => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
             viewport={{ once: true }}
-            className="text-base md:text-lg text-gray-300 mb-8 tracking-wide"
+            className="text-base md:text-lg text-gray-300 mb-8 tracking-[0.18em]"
           >
             Tell me about your idea, your vision, or just say hi.
           </motion.p>
@@ -77,10 +77,10 @@ const MainFooterContent = ({ scrollProgress }: { scrollProgress: any }) => {
           >
             <h3 className="text-xl md:text-2xl font-bold text-white tracking-wider">CONTACT</h3>
             <div className="space-y-2 text-gray-300">
-              <p className="hover:text-red-400 transition-colors cursor-pointer text-sm md:text-base">
+              <p className="hover:text-red-400 transition-colors cursor-pointer text-sm md:text-base block">
                 +48 888-106-559
               </p>
-              <p className="hover:text-red-400 transition-colors cursor-pointer text-sm md:text-base">
+              <p className="hover:text-red-400 transition-colors cursor-pointer text-sm md:text-base block">
                 GHOSTEK.KONTAKT@GMAIL.COM
               </p>
             </div>
