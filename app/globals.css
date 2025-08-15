@@ -93,3 +93,13 @@
 .modal-scroll-container::-webkit-scrollbar {
   display: none;
 }
+
+/* Adding smooth scroll behavior globally and for modal */
+html {
+  scroll-behavior: smooth;
+}
+
+.modal-scroll-container {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}

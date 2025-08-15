@@ -144,7 +144,6 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
                 ref={scrollContainerRef}
                 className="flex-1 overflow-y-auto focus:outline-none modal-scroll-container"
                 style={{
-                  scrollBehavior: "smooth",
                   scrollbarWidth: "none", // Firefox
                   msOverflowStyle: "none", // IE and Edge
                 }}
