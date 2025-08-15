@@ -48,7 +48,7 @@ const ProjectComponent = ({ project, hoveredItem, setHoveredItem, onProjectClick
                 x: hoveredItem === project.id ? 0 : -10,
               }}
               transition={{ duration: 0.3 }}
-              className="bg-white p-4"
+              className="bg-white p-4 rounded-lg"
             >
               <ChevronRight className="w-6 h-6 text-black" />
             </motion.div>
@@ -92,7 +92,7 @@ const ProjectComponent = ({ project, hoveredItem, setHoveredItem, onProjectClick
                   x: hoveredItem === `${project.id}-sub-${index}` ? 0 : -10,
                 }}
                 transition={{ duration: 0.3 }}
-                className="bg-white p-2 self-end"
+                className="bg-white p-2 self-end rounded-md"
               >
                 <ChevronRight className="w-4 h-4 text-black" />
               </motion.div>
@@ -218,7 +218,7 @@ export default function WorksPage() {
         <Footer />
 
         {/* ProjectModal component */}
-        <ProjectModal isOpen={isModalOpen} onClose={handleCloseModal} project={selectedProject} />
+        {isModalOpen && <ProjectModal isOpen={isModalOpen} onClose={handleCloseModal} project={selectedProject} />}
       </div>
     </PageTransition>
   )
