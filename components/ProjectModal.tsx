@@ -130,10 +130,16 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
                 <X className="w-5 h-5 text-white group-hover:text-gray-200 transition-colors" />
               </button>
 
-              <div className="p-6 bg-gradient-to-b from-black to-transparent relative z-10 flex-shrink-0">
-                <h2 className="text-3xl font-bold text-white mb-2">{project.title}</h2>
-                <p className="text-lg text-gray-300 mb-2">{project.subtitle}</p>
-                <span className="text-sm text-gray-400 uppercase tracking-wider">{project.category}</span>
+              <div className="p-4 sm:p-6 bg-gradient-to-b from-black/95 via-black/70 to-black/20 relative z-10 flex-shrink-0 transition-all duration-500 ease-out">
+                <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2 transition-all duration-300">
+                  {project.title}
+                </h2>
+                <p className="text-base sm:text-lg text-gray-300 mb-2 transition-all duration-300">
+                  {project.subtitle}
+                </p>
+                <span className="text-xs sm:text-sm text-gray-400 uppercase tracking-wider transition-all duration-300">
+                  {project.category}
+                </span>
               </div>
 
               <div
@@ -146,19 +152,21 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
                 }}
                 tabIndex={0}
               >
-                <div className="space-y-4 p-6 pt-0">
+                <div className="absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-black/20 to-transparent z-10 pointer-events-none transition-opacity duration-300" />
+
+                <div className="space-y-4 p-6 pt-2">
                   {allImages.map((image, index) => (
                     <motion.div
                       key={index}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3, delay: index * 0.1 }}
-                      className="w-full rounded-lg overflow-hidden"
+                      className="w-full rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:scale-[1.02]"
                     >
                       <img
                         src={image || "/placeholder.svg"}
                         alt={`${project.title} - Image ${index + 1}`}
-                        className="w-full h-auto object-cover"
+                        className="w-full h-auto object-cover transition-opacity duration-300"
                         loading="lazy"
                       />
                     </motion.div>
