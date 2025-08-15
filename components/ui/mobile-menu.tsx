@@ -24,7 +24,7 @@ export function MobileMenu({ className }: MobileMenuProps) {
       {/* Hamburger Button */}
       <button
         onClick={toggleMenu}
-        className={`md:hidden text-white p-2 z-50 relative ${className}`}
+        className={`md:hidden text-white p-2 z-[60] relative ${className}`}
         aria-label="Toggle menu"
       >
         {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -38,7 +38,7 @@ export function MobileMenu({ className }: MobileMenuProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 bg-black/95 backdrop-blur-sm z-40 md:hidden"
+            className="fixed inset-0 bg-black/95 backdrop-blur-sm z-50 md:hidden"
             onClick={toggleMenu}
           >
             <motion.div
@@ -65,18 +65,6 @@ export function MobileMenu({ className }: MobileMenuProps) {
                     </motion.a>
                   ))}
                 </nav>
-
-                <div className="mt-auto mb-8">
-                  <motion.button
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5 }}
-                    className="w-full px-8 py-3 border border-white text-white text-sm tracking-wider hover:bg-white hover:text-black transition-all duration-300"
-                    onClick={toggleMenu}
-                  >
-                    BOOK A SESSION
-                  </motion.button>
-                </div>
               </div>
             </motion.div>
           </motion.div>

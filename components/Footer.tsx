@@ -51,7 +51,7 @@ const MainFooterContent = ({ scrollProgress }: { scrollProgress: any }) => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
             viewport={{ once: true }}
-            className="text-base md:text-lg text-gray-300 mb-8 tracking-[0.18em]"
+            className="text-base md:text-lg text-gray-300 mb-8 tracking-normal"
           >
             Tell me about your idea, your vision, or just say hi.
           </motion.p>
@@ -110,24 +110,38 @@ const MainFooterContent = ({ scrollProgress }: { scrollProgress: any }) => {
               SOCIAL
             </h3>
             <div className="space-y-2 text-gray-300">
-              <p className="hover:text-red-400 transition-colors cursor-pointer text-sm md:text-base text-center md:text-right">
-                INSTAGRAM
-              </p>
-              <p className="hover:text-red-400 transition-colors cursor-pointer text-sm md:text-base text-center md:text-right">
-                PINTEREST
-              </p>
+              <a
+                href="https://www.instagram.com/ohhuseenaghost/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block"
+              >
+                <p className="hover:text-red-400 transition-colors cursor-pointer text-sm md:text-base text-center md:text-right">
+                  INSTAGRAM
+                </p>
+              </a>
+              <a
+                href="https://www.linkedin.com/in/hubert-kolejko-2b2345208/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block"
+              >
+                <p className="hover:text-red-400 transition-colors cursor-pointer text-sm md:text-base text-center md:text-right">
+                  LINKEDIN
+                </p>
+              </a>
             </div>
           </motion.div>
         </div>
 
         {/* Large Brand Name */}
-        <div className="relative overflow-hidden">
+        <div className="relative overflow-visible">
           <motion.div
             initial={{ opacity: 0, y: 100 }}
-            whileInView={{ opacity: 0.1, y: 0 }}
+            whileInView={{ opacity: 0.8, y: 0 }}
             transition={{ duration: 1.2, delay: 0.3 }}
             viewport={{ once: true }}
-            className="text-[3rem] md:text-[8rem] lg:text-[10rem] xl:text-[12rem] leading-none text-center select-none whitespace-nowrap font-black text-white tracking-[-0.075em]"
+            className="sm:text-[3rem] md:text-[8rem] lg:text-[10rem] xl:text-[12rem] leading-none text-center select-none whitespace-nowrap font-black text-white opacity-80 md:opacity-30 text-5xl tracking-[-0.075em]"
             style={{ fontFamily: "var(--font-space-grotesk)" }}
           >
             HUBERT KOLEJKO

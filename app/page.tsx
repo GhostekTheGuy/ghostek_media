@@ -58,9 +58,10 @@ export default function HeroSection() {
             }}
           />
 
-          <div className="max-w-[1440px] mx-auto relative z-20">
+          <div className="max-w-[1440px] mx-auto relative z-10">
+            {" "}
+            {/* reduced z-index from z-20 to z-10 to ensure hero content stays behind mobile menu */}
             <Navbar />
-
             {/* Main Content */}
             <div className="flex items-center justify-center min-h-[calc(100vh-120px)] relative">
               {/* Left Text */}
@@ -106,7 +107,7 @@ export default function HeroSection() {
                   digital experiences.
                 </p>
 
-                <Button href="/#about" className="mt-8 md:mt-12">
+                <Button href="/#about" className="mt-8 md:mt-12 relative z-10">
                   {"ABOUT ME"}
                 </Button>
               </div>
