@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { X, ChevronUp } from "lucide-react"
+import { ChevronUp } from "lucide-react"
 
 interface ProjectModalProps {
   isOpen: boolean
@@ -57,10 +57,17 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
       setShowScrollTop(scrollTop > 200)
     }
 
+    const handleWheel = (e: WheelEvent) => {
+      e.stopPropagation()
+      // Allow natural scrolling within the container
+    }
+
     container.addEventListener("scroll", handleScroll, { passive: true })
+    container.addEventListener("wheel", handleWheel, { passive: true })
 
     return () => {
       container.removeEventListener("scroll", handleScroll)
+      container.removeEventListener("wheel", handleWheel)
     }
   }, [isOpen])
 
@@ -102,6 +109,7 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
             transition={{ duration: 0.3 }}
             className="fixed inset-0 bg-black/80 backdrop-blur-md z-50"
             onClick={onClose}
+            onWheel={(e) => e.stopPropagation()}
           />
 
           {/* Modal Content */}
@@ -111,22 +119,13 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.3 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            onWheel={(e) => e.stopPropagation()}
           >
             <div
               className="relative max-w-4xl max-h-[90vh] w-full bg-black rounded-lg overflow-hidden flex flex-col"
               onClick={(e) => e.stopPropagation()}
+              onWheel={(e) => e.stopPropagation()}
             >
-              <button
-                onClick={(e) => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  onClose()
-                }}
-                className="absolute top-4 right-4 z-20 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full p-2 transition-colors duration-200"
-              >
-                <X className="w-6 h-6 text-white" />
-              </button>
-
               {/* Project Info Header */}
               <div className="p-6 bg-gradient-to-b from-black to-transparent relative z-10 flex-shrink-0">
                 <h2 className="text-3xl font-bold text-white mb-2">{project.title}</h2>
@@ -140,6 +139,7 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
                 style={{
                   scrollBehavior: "smooth",
                 }}
+                tabIndex={0}
               >
                 <div className="space-y-4 p-6 pt-0">
                   {allImages.map((image, index) => (
