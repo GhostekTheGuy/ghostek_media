@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { ChevronUp } from "lucide-react"
+import { ChevronUp, X } from "lucide-react"
 
 interface ProjectModalProps {
   isOpen: boolean
@@ -126,6 +126,13 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
               onClick={(e) => e.stopPropagation()}
               onWheel={(e) => e.stopPropagation()}
             >
+              <button
+                onClick={onClose}
+                className="absolute top-4 right-4 z-30 bg-black/60 backdrop-blur-sm hover:bg-black/80 rounded-full p-2 transition-colors duration-200 group"
+              >
+                <X className="w-5 h-5 text-white group-hover:text-gray-200 transition-colors" />
+              </button>
+
               {/* Project Info Header */}
               <div className="p-6 bg-gradient-to-b from-black to-transparent relative z-10 flex-shrink-0">
                 <h2 className="text-3xl font-bold text-white mb-2">{project.title}</h2>
@@ -135,7 +142,7 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
 
               <div
                 ref={scrollContainerRef}
-                className="flex-1 overflow-y-auto focus:outline-none"
+                className="flex-1 overflow-y-auto scrollbar-none focus:outline-none"
                 style={{
                   scrollBehavior: "smooth",
                 }}
