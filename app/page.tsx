@@ -40,8 +40,7 @@ export default function HeroSection() {
           fontFamily: "var(--font-space-grotesk), system-ui, sans-serif",
         }}
       >
-        {/* Cursor Trail - only in hero section */}
-        <CursorTrail images={images} containerId="hero-section" />
+        <CursorTrail images={images} containerId="hero-section" fadeOutDuration={800} />
 
         {/* Hero Section */}
         <div id="hero-section" className="min-h-screen relative cursor-none">
@@ -107,7 +106,9 @@ export default function HeroSection() {
                   digital experiences.
                 </p>
 
-                <Button className="mt-8 md:mt-12">BOOK A SESSION</Button>
+                <Button href="/#about" className="mt-8 md:mt-12">
+                  {"ABOUT ME"}
+                </Button>
               </div>
 
               {/* Right Text */}

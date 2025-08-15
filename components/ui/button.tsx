@@ -8,9 +8,10 @@ interface ButtonProps {
   href?: string
   onClick?: () => void
   className?: string
+  scroll?: boolean
 }
 
-export function Button({ children, href, onClick, className = "" }: ButtonProps) {
+export function Button({ children, href, onClick, className = "", scroll = false }: ButtonProps) {
   const baseClasses =
     "relative px-6 md:px-8 py-3 border border-white text-white text-sm tracking-wider overflow-hidden group transition-colors duration-300 z-10"
   const combinedClasses = `${baseClasses} ${className}`
@@ -24,7 +25,7 @@ export function Button({ children, href, onClick, className = "" }: ButtonProps)
 
   if (href) {
     return (
-      <Link href={href} className={`inline-block ${combinedClasses}`}>
+      <Link href={href} scroll={scroll} className={`inline-block ${combinedClasses}`}>
         {buttonContent}
       </Link>
     )

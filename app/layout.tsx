@@ -4,6 +4,8 @@ import { GeistSans } from "geist/font/sans"
 import { Space_Grotesk } from "next/font/google"
 import "./globals.css"
 import SmoothScroll from "@/components/SmoothScroll"
+import { GlobalCursorDot } from "@/components/ui/cursor-trail"
+import PageTransition from "@/components/ui/page-transition"
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -33,6 +35,8 @@ html {
         `}</style>
       </head>
       <body className={`${spaceGrotesk.variable} font-sans`}>
+        <GlobalCursorDot />
+        <PageTransition />
         <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>

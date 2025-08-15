@@ -18,6 +18,52 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
       touchMultiplier: 2,
       infinite: false,
     })
+    ;(window as any).lenis = lenis
+
+    const handleAnchorClick = (e: Event) => {
+      const target = e.target as HTMLElement
+      const link = target.closest('a[href^="/#"]') as HTMLAnchorElement
+
+      if (link) {
+        e.preventDefault()
+        const href = link.getAttribute("href")
+        if (href) {
+          const targetId = href.replace("/#", "")
+          const targetElement = document.getElementById(targetId)
+
+          if (targetElement) {
+            lenis.scrollTo(targetElement, {
+              offset: 0,
+              duration: 1.2,
+            })
+          }
+        }
+      }
+    }
+
+    const handleHashChange = () => {
+      const hash = window.location.hash
+      if (hash) {
+        const targetId = hash.replace("#", "")
+        const targetElement = document.getElementById(targetId)
+
+        if (targetElement) {
+          setTimeout(() => {
+            lenis.scrollTo(targetElement, {
+              offset: 0,
+              duration: 1.2,
+            })
+          }, 100)
+        }
+      }
+    }
+
+    document.addEventListener("click", handleAnchorClick)
+    window.addEventListener("hashchange", handleHashChange)
+
+    if (window.location.hash) {
+      handleHashChange()
+    }
 
     function raf(time: number) {
       lenis.raf(time)
@@ -27,7 +73,10 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     requestAnimationFrame(raf)
 
     return () => {
+      document.removeEventListener("click", handleAnchorClick)
+      window.removeEventListener("hashchange", handleHashChange)
       lenis.destroy()
+      ;(window as any).lenis = null
     }
   }, [])
 

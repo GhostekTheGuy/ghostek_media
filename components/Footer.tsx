@@ -106,10 +106,16 @@ const MainFooterContent = ({ scrollProgress }: { scrollProgress: any }) => {
             viewport={{ once: true }}
             className="space-y-4 text-center"
           >
-            <h3 className="text-xl md:text-2xl font-bold text-white tracking-wider">SOCIAL</h3>
+            <h3 className="text-xl md:text-2xl font-bold text-white tracking-wider text-center md:text-right">
+              SOCIAL
+            </h3>
             <div className="space-y-2 text-gray-300">
-              <p className="hover:text-red-400 transition-colors cursor-pointer text-sm md:text-base">INSTAGRAM</p>
-              <p className="hover:text-red-400 transition-colors cursor-pointer text-sm md:text-base">PINTEREST</p>
+              <p className="hover:text-red-400 transition-colors cursor-pointer text-sm md:text-base text-center md:text-right">
+                INSTAGRAM
+              </p>
+              <p className="hover:text-red-400 transition-colors cursor-pointer text-sm md:text-base text-center md:text-right">
+                PINTEREST
+              </p>
             </div>
           </motion.div>
         </div>

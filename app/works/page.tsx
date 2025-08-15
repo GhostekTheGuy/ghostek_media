@@ -9,6 +9,7 @@ import Navbar from "@/components/Navbar"
 import PageTransition from "@/components/PageTransition"
 import ProjectModal from "@/components/ProjectModal"
 import { fetchProjects, type Project } from "@/lib/projects"
+import ImageSkeleton from "@/components/ui/image-skeleton"
 
 const ProjectComponent = ({ project, hoveredItem, setHoveredItem, onProjectClick }: any) => {
   return (
@@ -117,7 +118,34 @@ export default function WorksPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
+  const [isTransitioning, setIsTransitioning] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    // Disable browser's scroll restoration
+    if ("scrollRestoration" in history) {
+      history.scrollRestoration = "manual"
+    }
+
+    // Wait for Lenis to initialize, then scroll to top
+    const scrollToTop = () => {
+      // Try Lenis first
+      if (window.lenis) {
+        window.lenis.scrollTo(0, { immediate: true })
+      } else {
+        // Fallback to native scroll
+        window.scrollTo(0, 0)
+      }
+    }
+
+    // Execute immediately
+    scrollToTop()
+
+    // Also execute after a short delay to ensure Lenis is ready
+    const timeoutId = setTimeout(scrollToTop, 100)
+
+    return () => clearTimeout(timeoutId)
+  }, [])
 
   useEffect(() => {
     const loadProjects = async () => {
@@ -126,11 +154,20 @@ export default function WorksPage() {
         const fetchedProjects = await fetchProjects()
         setProjects(fetchedProjects)
         setError(null)
+
+        setIsTransitioning(true)
+
+        setTimeout(() => {
+          setLoading(false)
+          setTimeout(() => {
+            setIsTransitioning(false)
+          }, 300) // Allow time for content fade-in
+        }, 500) // Allow time for skeleton fade-out
       } catch (err) {
         console.error("Failed to load projects:", err)
         setError("Failed to load projects. Please try again later.")
-      } finally {
         setLoading(false)
+        setIsTransitioning(false)
       }
     }
 
@@ -175,10 +212,14 @@ export default function WorksPage() {
         {/* Portfolio Gallery */}
         <div className="px-6 pb-20">
           <div className="max-w-[1440px] mx-auto">
-            {loading && (
-              <div className="flex justify-center items-center py-20">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
-              </div>
+            {(loading || isTransitioning) && (
+              <motion.div
+                initial={{ opacity: 1 }}
+                animate={{ opacity: loading ? 1 : 0 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+              >
+                <ImageSkeleton />
+              </motion.div>
             )}
 
             {error && (
@@ -200,7 +241,12 @@ export default function WorksPage() {
             )}
 
             {!loading && !error && projects.length > 0 && (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12"
+              >
                 {projects.map((project) => (
                   <ProjectComponent
                     key={project.id}
@@ -210,7 +256,7 @@ export default function WorksPage() {
                     onProjectClick={handleProjectClick}
                   />
                 ))}
-              </div>
+              </motion.div>
             )}
           </div>
         </div>
