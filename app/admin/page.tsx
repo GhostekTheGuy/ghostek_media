@@ -259,9 +259,9 @@ export default function AdminPage() {
 
         {/* Form Modal */}
         {showForm && (
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-start justify-center p-4 pt-8">
+          <div className="fixed inset-0 backdrop-blur-sm z-50 flex items-start justify-center p-4 pt-8">
             <div className="bg-gray-900 rounded-xl max-w-4xl w-full max-h-[90vh] flex flex-col border border-gray-800">
-              <div className="flex justify-between items-center p-6 border-b border-gray-800 bg-gray-900 rounded-t-xl flex-shrink-0">
+              <div className="flex justify-between items-center p-6 border-b border-gray-800 rounded-t-xl flex-shrink-0 bg-black">
                 <h2 className="text-2xl font-bold text-white">{editingProject ? "Edit Project" : "Add New Project"}</h2>
                 <button
                   onClick={handleCloseForm}
@@ -288,7 +288,7 @@ export default function AdminPage() {
                   }
                 }}
               >
-                <div className="p-6">
+                <div className="p-6 bg-black">
                   <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Basic Info */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -458,7 +458,7 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-4 p-6 border-t border-gray-800 bg-gray-900 rounded-b-xl flex-shrink-0">
+              <div className="flex justify-end gap-4 p-6 border-t border-gray-800 rounded-b-xl flex-shrink-0 bg-black">
                 <button
                   type="button"
                   onClick={handleCloseForm}
