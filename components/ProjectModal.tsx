@@ -28,10 +28,13 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
       document.body.style.position = "fixed"
       document.body.style.top = `-${scrollY}px`
       document.body.style.width = "100%"
+      document.body.style.overflow = "hidden"
     } else {
+      const scrollY = document.body.style.top
       document.body.style.position = ""
       document.body.style.top = ""
       document.body.style.width = ""
+      document.body.style.overflow = ""
       if (scrollY) {
         window.scrollTo(0, Number.parseInt(scrollY || "0") * -1)
       }
@@ -41,6 +44,7 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
       document.body.style.position = ""
       document.body.style.top = ""
       document.body.style.width = ""
+      document.body.style.overflow = ""
     }
   }, [isOpen])
 
@@ -48,21 +52,14 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
     const container = scrollContainerRef.current
     if (!container || !isOpen) return
 
-    const handleWheel = (e: WheelEvent) => {
-      e.stopPropagation()
-      // Let the browser handle the scrolling naturally
-    }
-
     const handleScroll = () => {
       const scrollTop = container.scrollTop
-      setShowScrollTop(scrollTop > 200) // Show button after scrolling 200px
+      setShowScrollTop(scrollTop > 200)
     }
 
-    container.addEventListener("wheel", handleWheel, { passive: true })
     container.addEventListener("scroll", handleScroll, { passive: true })
 
     return () => {
-      container.removeEventListener("wheel", handleWheel)
       container.removeEventListener("scroll", handleScroll)
     }
   }, [isOpen])
@@ -105,7 +102,6 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
             transition={{ duration: 0.3 }}
             className="fixed inset-0 bg-black/80 backdrop-blur-md z-50"
             onClick={onClose}
-            onWheel={(e) => e.stopPropagation()}
           />
 
           {/* Modal Content */}
@@ -115,12 +111,10 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.3 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            onWheel={(e) => e.stopPropagation()}
           >
             <div
               className="relative max-w-4xl max-h-[90vh] w-full bg-black rounded-lg overflow-hidden flex flex-col"
               onClick={(e) => e.stopPropagation()}
-              onWheel={(e) => e.stopPropagation()}
             >
               <button
                 onClick={(e) => {
@@ -134,7 +128,7 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
               </button>
 
               {/* Project Info Header */}
-              <div className="p-6 bg-gradient-to-b from-black to-transparent relative z-10">
+              <div className="p-6 bg-gradient-to-b from-black to-transparent relative z-10 flex-shrink-0">
                 <h2 className="text-3xl font-bold text-white mb-2">{project.title}</h2>
                 <p className="text-lg text-gray-300 mb-2">{project.subtitle}</p>
                 <span className="text-sm text-gray-400 uppercase tracking-wider">{project.category}</span>
@@ -142,11 +136,9 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
 
               <div
                 ref={scrollContainerRef}
-                className="flex-1 overflow-y-auto scrollbar-none focus:outline-none"
+                className="flex-1 overflow-y-auto focus:outline-none"
                 style={{
                   scrollBehavior: "smooth",
-                  scrollbarWidth: "none",
-                  msOverflowStyle: "none",
                 }}
               >
                 <div className="space-y-4 p-6 pt-0">
@@ -162,6 +154,7 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
                         src={image || "/placeholder.svg"}
                         alt={`${project.title} - Image ${index + 1}`}
                         className="w-full h-auto object-cover"
+                        loading="lazy"
                       />
                     </motion.div>
                   ))}
