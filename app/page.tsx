@@ -20,11 +20,11 @@ export default function HeroSection() {
     "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-3dP7shP57SurXcbr.png&w=1080&q=75",
     "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-mYBS5lSI0UzcRMAB.png&w=1080&q=75",
     "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-inIAtYLhE85QNNV9.png&w=1080&q=75",
-    "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-sjytiBjKsC74kjCx.png&w=1080&q=75",
+    "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-sjytiBjKsC74kjCx.png&w=2048&q=75",
     "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-a7TgiczuNg3tXFWk.png&w=1080&q=75",
     "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-EnoK7bi5ENxXh9rx.png&w=1080&q=75",
     "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-TSoV3WKWkeEOcsHZ.png&w=1080&q=75",
-    "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-hB81TXyxpapF1bOX.png&w=2048&q=75",
+    "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-hB81TXyxpapF1bOX.png&w=1080&q=75",
     "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-obcw9fwGJT0aKFD4.png&w=1080&q=75",
     "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-GENU1u4tkPkF1sFu.jpg&w=1080&q=75",
     "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-LDyKPWIcmHulDwCR.png&w=1080&q=75",
@@ -47,7 +47,7 @@ export default function HeroSection() {
         <CursorTrail images={images} containerId="hero-section" fadeOutDuration={800} />
 
         {/* Hero Section */}
-        <div id="hero-section" className="min-h-screen relative cursor-none">
+        <div id="hero-section" className="min-h-screen relative md:cursor-none">
           {/* 3D Marquee Background */}
           <div className="absolute inset-0 opacity-15">
             <ThreeDMarquee images={images} className="h-full w-full rounded-none" />

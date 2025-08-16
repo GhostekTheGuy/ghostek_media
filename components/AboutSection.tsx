@@ -35,7 +35,7 @@ export default function AboutSection() {
         <div className="w-full bg-gradient-radial from-red-500/10 to-transparent h-full" />
       </div>
 
-      <div className="max-w-[1440px] mx-auto px-6 relative z-10">
+      <div className="max-w-[1440px] mx-auto px-6 relative z-10 py-[41px] pb-[109px]">
         <div className="flex justify-between items-start mb-16">
           <motion.div style={{ opacity: headerOpacity, y: headerY }}>
             <h1 className="text-white text-lg font-light tracking-wider">[ABOUT]</h1>
@@ -109,9 +109,48 @@ export default function AboutSection() {
             />
           </motion.div>
 
-          <motion.div style={{ y: textY }} className="text-center max-w-2xl mx-auto px-4 md:px-8 relative">
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm rounded-2xl md:hidden" />
+          <div className="md:hidden flex flex-col items-center space-y-8 px-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1.2, ease: "easeOut" }}
+              viewport={{ once: true, margin: "-100px" }}
+              className="w-64 h-80"
+            >
+              <img
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-rLPCcRRyohHLNDEAJzlNZLWEqAUjgk.png"
+                alt="Portrait with dramatic lighting"
+                className="w-full h-full object-cover shadow-2xl rounded-lg"
+              />
+            </motion.div>
 
+            <div className="text-center max-w-sm">
+              <h2 className="text-white text-lg font-light leading-relaxed mb-6">
+                <motion.span style={{ opacity: textPart1Opacity }}>
+                  {
+                    "I'm Hubert Kolejko, a Product Designer & Full Stack Developer. In addition to my graphic design background, I also develop fullstack applications,"
+                  }
+                </motion.span>
+                <motion.span style={{ opacity: textPart2Opacity }}>
+                  {
+                    " combining my eye for detail with technical skills in frontend and backend development. This blend of creativity and coding allows me to"
+                  }
+                </motion.span>
+                <motion.span style={{ opacity: textPart3Opacity }}>
+                  {" build visually appealing and user-friendly digital experiences that truly connect with users."}
+                </motion.span>
+              </h2>
+
+              <motion.div style={{ opacity: buttonOpacity, y: buttonY }}>
+                <Button href="/works">SEE MY WORKS</Button>
+              </motion.div>
+            </div>
+          </div>
+
+          <motion.div
+            style={{ y: textY }}
+            className="text-center max-w-2xl mx-auto px-4 md:px-8 relative hidden md:block"
+          >
             <div className="relative z-10 py-8 md:py-0">
               <h2 className="text-white text-2xl md:text-3xl lg:text-4xl font-light leading-tight mb-8 md:mb-12">
                 <motion.span style={{ opacity: textPart1Opacity }}>

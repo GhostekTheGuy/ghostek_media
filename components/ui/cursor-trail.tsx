@@ -20,11 +20,25 @@ interface TrailImage {
 
 export function CursorTrail({ images, className = "", containerId, fadeOutDuration = 800 }: CursorTrailProps) {
   const [trail, setTrail] = useState<TrailImage[]>([])
+  const [isMobile, setIsMobile] = useState(false)
   const imageIndex = useRef(0)
   const idCounter = useRef(0)
   const lastPos = useRef({ x: 0, y: 0 })
 
   useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+
+    checkMobile()
+    window.addEventListener("resize", checkMobile)
+
+    return () => window.removeEventListener("resize", checkMobile)
+  }, [])
+
+  useEffect(() => {
+    if (isMobile) return
+
     let rafId: number
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -68,7 +82,9 @@ export function CursorTrail({ images, className = "", containerId, fadeOutDurati
       document.removeEventListener("mousemove", handleMouseMove)
       cancelAnimationFrame(rafId)
     }
-  }, [containerId, images, fadeOutDuration])
+  }, [containerId, images, fadeOutDuration, isMobile])
+
+  if (isMobile) return null
 
   return (
     <div className={`fixed inset-0 pointer-events-none z-0 ${className}`}>
@@ -121,8 +137,22 @@ export function CursorTrail({ images, className = "", containerId, fadeOutDurati
 export function GlobalCursorDot() {
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const [isVisible, setIsVisible] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+
+    checkMobile()
+    window.addEventListener("resize", checkMobile)
+
+    return () => window.removeEventListener("resize", checkMobile)
+  }, [])
+
+  useEffect(() => {
+    if (isMobile) return
+
     const handleMouseMove = (e: MouseEvent) => {
       setPosition({ x: e.clientX, y: e.clientY })
       setIsVisible(true)
@@ -139,7 +169,9 @@ export function GlobalCursorDot() {
       document.removeEventListener("mousemove", handleMouseMove)
       document.removeEventListener("mouseleave", handleMouseLeave)
     }
-  }, [])
+  }, [isMobile])
+
+  if (isMobile) return null
 
   return (
     <motion.div
