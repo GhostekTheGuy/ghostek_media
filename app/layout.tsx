@@ -6,6 +6,7 @@ import "./globals.css"
 import SmoothScroll from "@/components/SmoothScroll"
 import { GlobalCursorDot } from "@/components/ui/cursor-trail"
 import PageTransition from "@/components/ui/page-transition"
+import { MobileMenuProvider } from "@/contexts/MobileMenuContext"
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -37,7 +38,9 @@ html {
       <body className={`${spaceGrotesk.variable} font-sans`}>
         <GlobalCursorDot />
         <PageTransition />
-        <SmoothScroll>{children}</SmoothScroll>
+        <MobileMenuProvider>
+          <SmoothScroll>{children}</SmoothScroll>
+        </MobileMenuProvider>
       </body>
     </html>
   )

@@ -1,17 +1,15 @@
 "use client"
 
-import { useState } from "react"
 import { Menu, X } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
+import { useMobileMenu } from "@/contexts/MobileMenuContext"
 
 interface MobileMenuProps {
   className?: string
 }
 
 export function MobileMenu({ className }: MobileMenuProps) {
-  const [isOpen, setIsOpen] = useState(false)
-
-  const toggleMenu = () => setIsOpen(!isOpen)
+  const { isOpen, toggleMenu } = useMobileMenu()
 
   const menuItems = [
     { label: "ABOUT", href: "/#about" },

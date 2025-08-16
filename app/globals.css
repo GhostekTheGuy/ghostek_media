@@ -94,6 +94,18 @@
   display: none;
 }
 
+/* Hide scrollbars on mobile devices for main pages */
+@media (max-width: 768px) {
+  body::-webkit-scrollbar {
+    display: none;
+  }
+
+  body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
 /* Adding smooth scroll behavior globally and for modal */
 html {
   scroll-behavior: smooth;

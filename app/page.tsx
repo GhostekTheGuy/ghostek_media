@@ -8,8 +8,11 @@ import AboutSection from "@/components/AboutSection"
 import { Button } from "@/components/ui/button"
 import Navbar from "@/components/Navbar"
 import PageTransition from "@/components/PageTransition"
+import { useMobileMenu } from "@/contexts/MobileMenuContext"
 
 export default function HeroSection() {
+  const { isOpen: isMobileMenuOpen } = useMobileMenu()
+
   const images = [
     "https://media.licdn.com/dms/image/v2/C4E16AQGQsDC9lE5J2Q/profile-displaybackgroundimage-shrink_350_1400/profile-displaybackgroundimage-shrink_350_1400/0/1652007818718?e=1758153600&v=beta&t=p1ODboh1IEEaaboALO1M-4-oS8RpKU31aFqmxJdsIaA",
     "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-DAfEKbMghTXdzlM9.png&w=1080&q=75",
@@ -108,7 +111,14 @@ export default function HeroSection() {
                   digital experiences.
                 </p>
 
-                <Button href="/#about" className="mt-8 md:mt-12 relative z-10">
+                <Button
+                  href="/#about"
+                  className={`mt-8 md:mt-12 relative z-10 transition-opacity duration-300 ${
+                    isMobileMenuOpen
+                      ? "md:opacity-100 opacity-0 pointer-events-none md:pointer-events-auto"
+                      : "opacity-100 pointer-events-auto"
+                  }`}
+                >
                   {"ABOUT ME"}
                 </Button>
               </div>
