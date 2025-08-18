@@ -115,12 +115,12 @@ export default function AdminPage() {
   const handleEdit = (project: Project) => {
     setEditingProject(project)
     setFormData({
-      title: project.title,
-      subtitle: project.subtitle,
-      category: project.category,
-      main_image: project.main_image,
-      sub_images: [...project.sub_images, "", "", ""].slice(0, 3),
-      additional_images: project.additional_images,
+      title: project.title || "",
+      subtitle: project.subtitle || "",
+      category: project.category || "",
+      main_image: project.main_image || "",
+      sub_images: [...(project.sub_images || []), "", "", ""].slice(0, 3),
+      additional_images: project.additional_images || [],
     })
     setShowForm(true)
   }
