@@ -12,6 +12,7 @@ export interface Project {
   additional_images: string[]
   created_at: string
   updated_at: string
+  order_position: number
 }
 
 export interface CreateProjectData {
@@ -21,16 +22,34 @@ export interface CreateProjectData {
   main_image: string
   sub_images: string[]
   additional_images: string[]
+  order_position: number
 }
 
 export interface UpdateProjectData extends Partial<CreateProjectData> {}
 
 export async function getAllProjects(): Promise<Project[]> {
   try {
-    const projects = await sql`
-      SELECT * FROM projects 
-      ORDER BY created_at DESC
+    const columnCheck = await sql`
+      SELECT column_name 
+      FROM information_schema.columns 
+      WHERE table_name = 'projects' AND column_name = 'order_position'
     `
+
+    let projects
+    if (columnCheck.length > 0) {
+      // Column exists, use it for ordering
+      projects = await sql`
+        SELECT * FROM projects 
+        ORDER BY order_position ASC, created_at DESC
+      `
+    } else {
+      // Column doesn't exist yet, fallback to creation date ordering
+      projects = await sql`
+        SELECT *, 0 as order_position FROM projects 
+        ORDER BY created_at DESC
+      `
+    }
+
     return projects as Project[]
   } catch (error) {
     console.error("Error fetching projects:", error)
@@ -54,8 +73,8 @@ export async function getProjectById(id: number): Promise<Project | null> {
 export async function createProject(data: CreateProjectData): Promise<Project> {
   try {
     const projects = await sql`
-      INSERT INTO projects (title, subtitle, category, main_image, sub_images, additional_images)
-      VALUES (${data.title}, ${data.subtitle || null}, ${data.category}, ${data.main_image}, ${data.sub_images}, ${data.additional_images})
+      INSERT INTO projects (title, subtitle, category, main_image, sub_images, additional_images, order_position)
+      VALUES (${data.title}, ${data.subtitle || null}, ${data.category}, ${data.main_image}, ${data.sub_images}, ${data.additional_images}, ${data.order_position})
       RETURNING *
     `
     return projects[0] as Project
@@ -97,5 +116,65 @@ export async function deleteProject(id: number): Promise<boolean> {
   } catch (error) {
     console.error("Error deleting project:", error)
     throw new Error("Failed to delete project")
+  }
+}
+
+export async function reorderProjects(projectId: number, direction: "up" | "down"): Promise<void> {
+  try {
+    const columnCheck = await sql`
+      SELECT column_name 
+      FROM information_schema.columns 
+      WHERE table_name = 'projects' AND column_name = 'order_position'
+    `
+
+    if (columnCheck.length === 0) {
+      throw new Error(
+        "Project ordering is not available. Please run the database migration to add the order_position column.",
+      )
+    }
+
+    // Get current project and its order position
+    const currentProject = await sql`
+      SELECT id, order_position FROM projects WHERE id = ${projectId}
+    `
+
+    if (!currentProject[0]) {
+      throw new Error("Project not found")
+    }
+
+    const currentOrder = currentProject[0].order_position
+
+    if (direction === "up") {
+      // Find the project with the next higher order (lower number)
+      const targetProject = await sql`
+        SELECT id, order_position FROM projects 
+        WHERE order_position < ${currentOrder}
+        ORDER BY order_position DESC
+        LIMIT 1
+      `
+
+      if (targetProject[0]) {
+        // Swap positions
+        await sql`UPDATE projects SET order_position = ${targetProject[0].order_position} WHERE id = ${projectId}`
+        await sql`UPDATE projects SET order_position = ${currentOrder} WHERE id = ${targetProject[0].id}`
+      }
+    } else {
+      // Find the project with the next lower order (higher number)
+      const targetProject = await sql`
+        SELECT id, order_position FROM projects 
+        WHERE order_position > ${currentOrder}
+        ORDER BY order_position ASC
+        LIMIT 1
+      `
+
+      if (targetProject[0]) {
+        // Swap positions
+        await sql`UPDATE projects SET order_position = ${targetProject[0].order_position} WHERE id = ${projectId}`
+        await sql`UPDATE projects SET order_position = ${currentOrder} WHERE id = ${targetProject[0].id}`
+      }
+    }
+  } catch (error) {
+    console.error("Error reordering projects:", error)
+    throw error
   }
 }

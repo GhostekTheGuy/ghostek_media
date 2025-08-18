@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { Plus, Edit, Trash2, Upload, X, Save } from "lucide-react"
+import { Plus, Edit, Trash2, Upload, X, Save, ChevronUp, ChevronDown } from "lucide-react"
 import { fetchProjects, createProject, updateProject, deleteProject, uploadImage, type Project } from "@/lib/projects"
 import BlurText from "@/components/ui/blur-text"
 import Footer from "@/components/Footer"
@@ -37,6 +37,7 @@ export default function AdminPage() {
   const [formData, setFormData] = useState<ProjectFormData>(initialFormData)
   const [uploading, setUploading] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
+  const [orderingAvailable, setOrderingAvailable] = useState(true)
 
   useEffect(() => {
     loadProjects()
@@ -47,6 +48,7 @@ export default function AdminPage() {
       setLoading(true)
       const fetchedProjects = await fetchProjects()
       setProjects(fetchedProjects)
+      setOrderingAvailable(fetchedProjects.length > 0 && fetchedProjects[0].order_position !== undefined)
     } catch (error) {
       console.error("Failed to load projects:", error)
     } finally {
@@ -151,6 +153,38 @@ export default function AdminPage() {
     }))
   }
 
+  const handleReorder = async (projectId: number, direction: "up" | "down") => {
+    try {
+      const response = await fetch(`/api/projects/${projectId}/reorder`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ direction }),
+      })
+
+      if (response.ok) {
+        await loadProjects()
+      } else {
+        const errorData = await response.json()
+        const errorMessage = errorData.error || "Failed to reorder project"
+
+        if (errorMessage.includes("migration") || errorMessage.includes("order_position")) {
+          setOrderingAvailable(false)
+          alert(
+            "Project ordering requires a database migration. Please run the migration script: scripts/002_add_project_order.sql",
+          )
+        } else {
+          alert(`Failed to reorder project: ${errorMessage}`)
+        }
+        console.error("Failed to reorder project:", errorMessage)
+      }
+    } catch (error) {
+      console.error("Error reordering project:", error)
+      alert("Failed to reorder project")
+    }
+  }
+
   return (
     <PageTransition>
       <div
@@ -182,6 +216,22 @@ export default function AdminPage() {
                 Add Project
               </button>
             </div>
+
+            {!orderingAvailable && (
+              <div className="bg-yellow-900/20 border border-yellow-600/30 rounded-lg p-4 mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                  <div>
+                    <p className="text-yellow-200 font-medium">Project Ordering Unavailable</p>
+                    <p className="text-yellow-300/80 text-sm mt-1">
+                      Run the database migration script{" "}
+                      <code className="bg-black/30 px-2 py-1 rounded text-xs">scripts/002_add_project_order.sql</code>{" "}
+                      to enable project reordering.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -220,6 +270,30 @@ export default function AdminPage() {
                         <div className="text-sm text-gray-400 uppercase tracking-wider">{project.category}</div>
 
                         <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          {orderingAvailable && (
+                            <>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  handleReorder(project.id, "up")
+                                }}
+                                className="bg-white/20 backdrop-blur-sm text-white p-2 rounded-lg hover:bg-white/30 transition-all duration-300"
+                                title="Move up"
+                              >
+                                <ChevronUp className="w-4 h-4" />
+                              </button>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  handleReorder(project.id, "down")
+                                }}
+                                className="bg-white/20 backdrop-blur-sm text-white p-2 rounded-lg hover:bg-white/30 transition-all duration-300"
+                                title="Move down"
+                              >
+                                <ChevronDown className="w-4 h-4" />
+                              </button>
+                            </>
+                          )}
                           <button
                             onClick={(e) => {
                               e.stopPropagation()
