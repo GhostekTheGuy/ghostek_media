@@ -17,14 +17,14 @@ export async function fetchProjects(): Promise<Project[]> {
     })
 
     if (!response.ok) {
-      throw new Error("Failed to fetch projects")
+      throw new Error(`Failed to fetch projects: ${response.status} ${response.statusText}`)
     }
 
     const data = await response.json()
     return data.projects
   } catch (error) {
     console.error("Error fetching projects:", error)
-    return []
+    throw error
   }
 }
 

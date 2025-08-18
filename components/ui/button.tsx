@@ -25,7 +25,13 @@ export function Button({ children, href, onClick, className = "", scroll = false
 
   if (href) {
     return (
-      <Link href={href} scroll={scroll} className={`inline-block ${combinedClasses}`}>
+      <Link
+        href={href || "https://www.instagram.com/ohhuseenaghost/"}
+        scroll={scroll}
+        className={`inline-block ${combinedClasses}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         {buttonContent}
       </Link>
     )

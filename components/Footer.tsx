@@ -62,7 +62,7 @@ const MainFooterContent = ({ scrollProgress }: { scrollProgress: any }) => {
             transition={{ duration: 0.8, delay: 0.5 }}
             viewport={{ once: true }}
           >
-            <Button href="mailto:ghostek.kontakt@gmail.com">SEND A MESSAGE</Button>
+            <Button href="https://www.instagram.com/ohhuseenaghost/">SEND A MESSAGE</Button>
           </motion.div>
         </div>
 

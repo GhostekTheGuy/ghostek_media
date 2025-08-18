@@ -34,7 +34,7 @@ export async function getAllProjects(): Promise<Project[]> {
     return projects as Project[]
   } catch (error) {
     console.error("Error fetching projects:", error)
-    throw new Error("Failed to fetch projects")
+    throw new Error(`Database connection failed: ${error instanceof Error ? error.message : "Unknown error"}`)
   }
 }
 
