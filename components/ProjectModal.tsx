@@ -22,30 +22,39 @@ interface ProjectModalProps {
 export default function ProjectModal({ isOpen, onClose, project }: ProjectModalProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [showScrollTop, setShowScrollTop] = useState(false)
+  const savedScrollPosition = useRef<number>(0)
 
   useEffect(() => {
     if (isOpen) {
-      const scrollY = window.scrollY
-      document.body.style.position = "fixed"
-      document.body.style.top = `-${scrollY}px`
-      document.body.style.width = "100%"
+      // Save current scroll position
+      savedScrollPosition.current = window.scrollY
+
+      // Prevent body scrolling with simpler approach
       document.body.style.overflow = "hidden"
+      document.body.style.paddingRight = "15px" // Prevent layout shift from scrollbar
     } else {
-      const scrollY = document.body.style.top
-      document.body.style.position = ""
-      document.body.style.top = ""
-      document.body.style.width = ""
+      // Restore body scrolling immediately
       document.body.style.overflow = ""
-      if (scrollY) {
-        window.scrollTo(0, Number.parseInt(scrollY || "0") * -1)
+      document.body.style.paddingRight = ""
+
+      // Restore scroll position if we have one saved
+      if (savedScrollPosition.current > 0) {
+        // Use setTimeout to ensure DOM is ready after modal animation
+        setTimeout(() => {
+          if (window.lenis) {
+            window.lenis.scrollTo(savedScrollPosition.current, { immediate: true })
+          } else {
+            window.scrollTo(0, savedScrollPosition.current)
+          }
+          savedScrollPosition.current = 0
+        }, 100)
       }
     }
 
+    // Cleanup function to ensure body styles are always reset
     return () => {
-      document.body.style.position = ""
-      document.body.style.top = ""
-      document.body.style.width = ""
       document.body.style.overflow = ""
+      document.body.style.paddingRight = ""
     }
   }, [isOpen])
 
