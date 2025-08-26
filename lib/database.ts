@@ -178,3 +178,28 @@ export async function reorderProjects(projectId: number, direction: "up" | "down
     throw error
   }
 }
+
+export async function updateProjectOrder(id: number, orderPosition: number): Promise<void> {
+  try {
+    const columnCheck = await sql`
+      SELECT column_name 
+      FROM information_schema.columns 
+      WHERE table_name = 'projects' AND column_name = 'order_position'
+    `
+
+    if (columnCheck.length === 0) {
+      throw new Error(
+        "Project ordering is not available. Please run the database migration to add the order_position column.",
+      )
+    }
+
+    await sql`
+      UPDATE projects 
+      SET order_position = ${orderPosition}, updated_at = NOW()
+      WHERE id = ${id}
+    `
+  } catch (error) {
+    console.error("Error updating project order:", error)
+    throw error
+  }
+}

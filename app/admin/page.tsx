@@ -4,29 +4,166 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { Plus, Edit, Trash2, Upload, X, Save, ChevronUp, ChevronDown } from "lucide-react"
+import { Plus, Edit, Trash2, Upload, X, Save, GripVertical } from "lucide-react"
 import { fetchProjects, createProject, updateProject, deleteProject, uploadImage, type Project } from "@/lib/projects"
 import BlurText from "@/components/ui/blur-text"
 import Footer from "@/components/Footer"
 import Navbar from "@/components/Navbar"
 import PageTransition from "@/components/PageTransition"
 
-interface ProjectFormData {
-  title: string
-  subtitle: string
-  category: string
-  main_image: string
-  sub_images: string[]
-  additional_images: string[]
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core"
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  horizontalListSortingStrategy,
+} from "@dnd-kit/sortable"
+import { useSortable } from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
+
+function SortableProjectCard({
+  project,
+  onEdit,
+  onDelete,
+  orderingAvailable,
+}: {
+  project: Project
+  onEdit: (project: Project) => void
+  onDelete: (project: Project) => void
+  orderingAvailable: boolean
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: project.id })
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  }
+
+  return (
+    <motion.div
+      ref={setNodeRef}
+      style={style}
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      viewport={{ once: true }}
+      className={`relative overflow-hidden rounded-xl group cursor-pointer ${isDragging ? "z-50 shadow-2xl" : ""}`}
+    >
+      <div
+        className="h-64 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+        style={{ backgroundImage: `url(${project.main_image})` }}
+      />
+
+      <div className="absolute inset-0 bg-black/40 group-hover:bg-black/60 transition-all duration-500" />
+
+      <div className="absolute inset-0 p-6 flex flex-col justify-between">
+        <div>
+          <h3 className="text-2xl font-bold text-white mb-2 tracking-wide">{project.title}</h3>
+          {project.subtitle && <p className="text-gray-300 tracking-wider">{project.subtitle}</p>}
+        </div>
+
+        <div className="flex justify-between items-end">
+          <div className="text-sm text-gray-400 uppercase tracking-wider">{project.category}</div>
+
+          <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            {orderingAvailable && (
+              <button
+                {...attributes}
+                {...listeners}
+                className="bg-white/20 backdrop-blur-sm text-white p-2 rounded-lg hover:bg-white/30 transition-all duration-300 cursor-grab active:cursor-grabbing"
+                title="Drag to reorder"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <GripVertical className="w-4 h-4" />
+              </button>
+            )}
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                onEdit(project)
+              }}
+              className="bg-white/20 backdrop-blur-sm text-white p-2 rounded-lg hover:bg-white/30 transition-all duration-300"
+            >
+              <Edit className="w-4 h-4" />
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                onDelete(project)
+              }}
+              className="bg-red-500/80 backdrop-blur-sm text-white p-2 rounded-lg hover:bg-red-500 transition-all duration-300"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileHover={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+        className="absolute inset-0 bg-gradient-to-t from-red-500/20 to-transparent pointer-events-none"
+      />
+    </motion.div>
+  )
 }
 
-const initialFormData: ProjectFormData = {
-  title: "",
-  subtitle: "",
-  category: "",
-  main_image: "",
-  sub_images: ["", "", ""],
-  additional_images: [],
+function SortableImageItem({
+  image,
+  index,
+  onRemove,
+  type,
+}: {
+  image: string
+  index: number
+  onRemove: () => void
+  type: "sub" | "additional"
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: `${type}-${index}`,
+  })
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  }
+
+  return (
+    <div ref={setNodeRef} style={style} className="relative group">
+      <img
+        src={image || "/placeholder.svg"}
+        alt={`${type} ${index + 1}`}
+        className={`w-full object-cover rounded ${type === "sub" ? "h-24" : "h-20"}`}
+      />
+      <button
+        type="button"
+        onClick={onRemove}
+        className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity"
+      >
+        <X className="w-3 h-3" />
+      </button>
+      <button
+        {...attributes}
+        {...listeners}
+        className="absolute top-1 left-1 bg-white/20 backdrop-blur-sm text-white p-1 rounded-full hover:bg-white/30 opacity-0 group-hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing"
+        title="Drag to reorder"
+      >
+        <GripVertical className="w-3 h-3" />
+      </button>
+    </div>
+  )
 }
 
 export default function AdminPage() {
@@ -153,21 +290,55 @@ export default function AdminPage() {
     }))
   }
 
-  const handleReorder = async (projectId: number, direction: "up" | "down") => {
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  )
+
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event
+
+    if (!over || active.id === over.id) {
+      return
+    }
+
+    const oldIndex = projects.findIndex((project) => project.id === active.id)
+    const newIndex = projects.findIndex((project) => project.id === over.id)
+
+    if (oldIndex === -1 || newIndex === -1) {
+      return
+    }
+
+    // Optimistically update the UI
+    const newProjects = arrayMove(projects, oldIndex, newIndex)
+    setProjects(newProjects)
+
     try {
-      const response = await fetch(`/api/projects/${projectId}/reorder`, {
+      // Update the order in the database
+      const updates = newProjects.map((project, index) => ({
+        id: project.id,
+        order_position: index + 1,
+      }))
+
+      const response = await fetch("/api/projects/reorder-batch", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ direction }),
+        body: JSON.stringify({ updates }),
       })
 
-      if (response.ok) {
+      if (!response.ok) {
+        // Revert the optimistic update on error
         await loadProjects()
-      } else {
         const errorData = await response.json()
-        const errorMessage = errorData.error || "Failed to reorder project"
+        const errorMessage = errorData.error || "Failed to reorder projects"
 
         if (errorMessage.includes("migration") || errorMessage.includes("order_position")) {
           setOrderingAvailable(false)
@@ -175,14 +346,41 @@ export default function AdminPage() {
             "Project ordering requires a database migration. Please run the migration script: scripts/002_add_project_order.sql",
           )
         } else {
-          alert(`Failed to reorder project: ${errorMessage}`)
+          alert(`Failed to reorder projects: ${errorMessage}`)
         }
-        console.error("Failed to reorder project:", errorMessage)
       }
     } catch (error) {
-      console.error("Error reordering project:", error)
-      alert("Failed to reorder project")
+      // Revert the optimistic update on error
+      await loadProjects()
+      console.error("Error reordering projects:", error)
+      alert("Failed to reorder projects")
     }
+  }
+
+  const handleSubImageDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event
+    if (!over || active.id === over.id) return
+
+    const activeIndex = Number.parseInt(active.id.toString().split("-")[1])
+    const overIndex = Number.parseInt(over.id.toString().split("-")[1])
+
+    setFormData((prev) => ({
+      ...prev,
+      sub_images: arrayMove(prev.sub_images, activeIndex, overIndex),
+    }))
+  }
+
+  const handleAdditionalImageDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event
+    if (!over || active.id === over.id) return
+
+    const activeIndex = Number.parseInt(active.id.toString().split("-")[1])
+    const overIndex = Number.parseInt(over.id.toString().split("-")[1])
+
+    setFormData((prev) => ({
+      ...prev,
+      additional_images: arrayMove(prev.additional_images, activeIndex, overIndex),
+    }))
   }
 
   return (
@@ -232,6 +430,20 @@ export default function AdminPage() {
                 </div>
               </div>
             )}
+
+            {orderingAvailable && projects.length > 0 && (
+              <div className="bg-blue-900/20 border border-blue-600/30 rounded-lg p-4 mb-6">
+                <div className="flex items-center gap-3">
+                  <GripVertical className="w-4 h-4 text-blue-400" />
+                  <div>
+                    <p className="text-blue-200 font-medium">Drag & Drop Ordering</p>
+                    <p className="text-blue-300/80 text-sm mt-1">
+                      Drag projects by the grip handle to reorder them. Changes are saved automatically.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -243,88 +455,21 @@ export default function AdminPage() {
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {projects.map((project) => (
-                  <motion.div
-                    key={project.id}
-                    initial={{ opacity: 0, y: 50 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                    viewport={{ once: true }}
-                    className="relative overflow-hidden rounded-xl group cursor-pointer"
-                  >
-                    <div
-                      className="h-64 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                      style={{ backgroundImage: `url(${project.main_image})` }}
-                    />
-
-                    <div className="absolute inset-0 bg-black/40 group-hover:bg-black/60 transition-all duration-500" />
-
-                    <div className="absolute inset-0 p-6 flex flex-col justify-between">
-                      <div>
-                        <h3 className="text-2xl font-bold text-white mb-2 tracking-wide">{project.title}</h3>
-                        {project.subtitle && <p className="text-gray-300 tracking-wider">{project.subtitle}</p>}
-                      </div>
-
-                      <div className="flex justify-between items-end">
-                        <div className="text-sm text-gray-400 uppercase tracking-wider">{project.category}</div>
-
-                        <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          {orderingAvailable && (
-                            <>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                  handleReorder(project.id, "up")
-                                }}
-                                className="bg-white/20 backdrop-blur-sm text-white p-2 rounded-lg hover:bg-white/30 transition-all duration-300"
-                                title="Move up"
-                              >
-                                <ChevronUp className="w-4 h-4" />
-                              </button>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                  handleReorder(project.id, "down")
-                                }}
-                                className="bg-white/20 backdrop-blur-sm text-white p-2 rounded-lg hover:bg-white/30 transition-all duration-300"
-                                title="Move down"
-                              >
-                                <ChevronDown className="w-4 h-4" />
-                              </button>
-                            </>
-                          )}
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              handleEdit(project)
-                            }}
-                            className="bg-white/20 backdrop-blur-sm text-white p-2 rounded-lg hover:bg-white/30 transition-all duration-300"
-                          >
-                            <Edit className="w-4 h-4" />
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              handleDelete(project)
-                            }}
-                            className="bg-red-500/80 backdrop-blur-sm text-white p-2 rounded-lg hover:bg-red-500 transition-all duration-300"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      whileHover={{ opacity: 1 }}
-                      transition={{ duration: 0.3 }}
-                      className="absolute inset-0 bg-gradient-to-t from-red-500/20 to-transparent pointer-events-none"
-                    />
-                  </motion.div>
-                ))}
-              </div>
+              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                <SortableContext items={projects.map((p) => p.id)} strategy={verticalListSortingStrategy}>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {projects.map((project) => (
+                      <SortableProjectCard
+                        key={project.id}
+                        project={project}
+                        onEdit={handleEdit}
+                        onDelete={handleDelete}
+                        orderingAvailable={orderingAvailable}
+                      />
+                    ))}
+                  </div>
+                </SortableContext>
+              </DndContext>
             )}
           </div>
         </div>
@@ -440,79 +585,88 @@ export default function AdminPage() {
 
                     {/* Sub Images */}
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">Sub Images (3 images)</label>
-                      <div className="grid grid-cols-3 gap-4">
-                        {formData.sub_images.map((image, index) => (
-                          <div
-                            key={index}
-                            className="border-2 border-dashed border-gray-700 rounded-lg p-2 bg-gray-800/50"
-                          >
-                            {image ? (
-                              <div className="relative">
-                                <img
-                                  src={image || "/placeholder.svg"}
-                                  alt={`Sub ${index + 1}`}
-                                  className="w-full h-24 object-cover rounded"
-                                />
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    setFormData((prev) => ({
-                                      ...prev,
-                                      sub_images: prev.sub_images.map((img, i) => (i === index ? "" : img)),
-                                    }))
-                                  }
-                                  className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full hover:bg-red-600"
-                                >
-                                  <X className="w-3 h-3" />
-                                </button>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        Sub Images (3 images) - Drag to reorder
+                      </label>
+                      <DndContext
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        onDragEnd={handleSubImageDragEnd}
+                      >
+                        <SortableContext
+                          items={formData.sub_images.map((_, index) => `sub-${index}`)}
+                          strategy={horizontalListSortingStrategy}
+                        >
+                          <div className="grid grid-cols-3 gap-4">
+                            {formData.sub_images.map((image, index) => (
+                              <div
+                                key={`sub-${index}`}
+                                className="border-2 border-dashed border-gray-700 rounded-lg p-2 bg-gray-800/50"
+                              >
+                                {image ? (
+                                  <SortableImageItem
+                                    image={image}
+                                    index={index}
+                                    type="sub"
+                                    onRemove={() =>
+                                      setFormData((prev) => ({
+                                        ...prev,
+                                        sub_images: prev.sub_images.map((img, i) => (i === index ? "" : img)),
+                                      }))
+                                    }
+                                  />
+                                ) : (
+                                  <label className="cursor-pointer block text-center h-24 flex flex-col justify-center">
+                                    <Upload className="w-4 h-4 mx-auto mb-1 text-gray-400" />
+                                    <span className="text-xs text-gray-400">
+                                      {uploading === `sub_images-${index}` ? "Uploading..." : "Upload"}
+                                    </span>
+                                    <input
+                                      type="file"
+                                      accept="image/*"
+                                      onChange={(e) => {
+                                        const file = e.target.files?.[0]
+                                        if (file) handleImageUpload(file, "sub_images", index)
+                                      }}
+                                      className="hidden"
+                                      disabled={uploading === `sub_images-${index}`}
+                                    />
+                                  </label>
+                                )}
                               </div>
-                            ) : (
-                              <label className="cursor-pointer block text-center h-24 flex flex-col justify-center">
-                                <Upload className="w-4 h-4 mx-auto mb-1 text-gray-400" />
-                                <span className="text-xs text-gray-400">
-                                  {uploading === `sub_images-${index}` ? "Uploading..." : "Upload"}
-                                </span>
-                                <input
-                                  type="file"
-                                  accept="image/*"
-                                  onChange={(e) => {
-                                    const file = e.target.files?.[0]
-                                    if (file) handleImageUpload(file, "sub_images", index)
-                                  }}
-                                  className="hidden"
-                                  disabled={uploading === `sub_images-${index}`}
-                                />
-                              </label>
-                            )}
+                            ))}
                           </div>
-                        ))}
-                      </div>
+                        </SortableContext>
+                      </DndContext>
                     </div>
 
                     {/* Additional Images */}
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Additional Images (for modal gallery)
+                        Additional Images (for modal gallery) - Drag to reorder
                       </label>
-                      <div className="grid grid-cols-4 gap-4 mb-4">
-                        {formData.additional_images.map((image, index) => (
-                          <div key={index} className="relative">
-                            <img
-                              src={image || "/placeholder.svg"}
-                              alt={`Additional ${index + 1}`}
-                              className="w-full h-20 object-cover rounded"
-                            />
-                            <button
-                              type="button"
-                              onClick={() => removeAdditionalImage(index)}
-                              className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full hover:bg-red-600"
-                            >
-                              <X className="w-3 h-3" />
-                            </button>
+                      <DndContext
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        onDragEnd={handleAdditionalImageDragEnd}
+                      >
+                        <SortableContext
+                          items={formData.additional_images.map((_, index) => `additional-${index}`)}
+                          strategy={horizontalListSortingStrategy}
+                        >
+                          <div className="grid grid-cols-4 gap-4 mb-4">
+                            {formData.additional_images.map((image, index) => (
+                              <SortableImageItem
+                                key={`additional-${index}`}
+                                image={image}
+                                index={index}
+                                type="additional"
+                                onRemove={() => removeAdditionalImage(index)}
+                              />
+                            ))}
                           </div>
-                        ))}
-                      </div>
+                        </SortableContext>
+                      </DndContext>
                       <label className="cursor-pointer inline-flex items-center gap-2 bg-gray-800 text-gray-300 px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors border border-gray-700">
                         <Upload className="w-4 h-4" />
                         {uploading === "additional_images" ? "Uploading..." : "Add More Images"}
@@ -556,4 +710,22 @@ export default function AdminPage() {
       </div>
     </PageTransition>
   )
+}
+
+interface ProjectFormData {
+  title: string
+  subtitle: string
+  category: string
+  main_image: string
+  sub_images: string[]
+  additional_images: string[]
+}
+
+const initialFormData: ProjectFormData = {
+  title: "",
+  subtitle: "",
+  category: "",
+  main_image: "",
+  sub_images: ["", "", ""],
+  additional_images: [],
 }
