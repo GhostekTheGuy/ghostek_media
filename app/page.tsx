@@ -9,9 +9,12 @@ import { Button } from "@/components/ui/button"
 import Navbar from "@/components/Navbar"
 import PageTransition from "@/components/PageTransition"
 import { useMobileMenu } from "@/contexts/MobileMenuContext"
+import { usePageView } from "@/hooks/useAnalytics"
 
 export default function HeroSection() {
   const { isOpen: isMobileMenuOpen } = useMobileMenu()
+
+  usePageView("/")
 
   const images = [
     "https://media.licdn.com/dms/image/v2/C4E16AQGQsDC9lE5J2Q/profile-displaybackgroundimage-shrink_350_1400/profile-displaybackgroundimage-shrink_350_1400/0/1652007818718?e=1758153600&v=beta&t=p1ODboh1IEEaaboALO1M-4-oS8RpKU31aFqmxJdsIaA",

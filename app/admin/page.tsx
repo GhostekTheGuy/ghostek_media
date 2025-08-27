@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { Plus, Edit, Trash2, Upload, X, Save, GripVertical } from "lucide-react"
+import { Plus, Edit, Trash2, Upload, X, Save, GripVertical, BarChart3, Eye, TrendingUp, Calendar } from "lucide-react"
 import { fetchProjects, createProject, updateProject, deleteProject, uploadImage, type Project } from "@/lib/projects"
 import BlurText from "@/components/ui/blur-text"
 import Footer from "@/components/Footer"
@@ -29,6 +29,164 @@ import {
 } from "@dnd-kit/sortable"
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
+
+interface AnalyticsStats {
+  totalPageViews: number
+  totalProjectViews: number
+  topProjects: Array<{
+    project_id: number
+    title: string
+    view_count: number
+  }>
+  recentViews: Array<{
+    page_path: string
+    view_count: number
+  }>
+}
+
+function AnalyticsDashboard() {
+  const [stats, setStats] = useState<AnalyticsStats | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [timeRange, setTimeRange] = useState(30)
+
+  useEffect(() => {
+    loadAnalytics()
+  }, [timeRange])
+
+  const loadAnalytics = async () => {
+    try {
+      setLoading(true)
+      const response = await fetch(`/api/analytics/stats?days=${timeRange}`)
+      if (response.ok) {
+        const data = await response.json()
+        setStats(data)
+      }
+    } catch (error) {
+      console.error("Failed to load analytics:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="bg-gray-900/50 rounded-xl p-6 mb-8">
+        <div className="animate-pulse">
+          <div className="h-6 bg-gray-700 rounded w-32 mb-4"></div>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="h-20 bg-gray-700 rounded"></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (!stats) {
+    return (
+      <div className="bg-gray-900/50 rounded-xl p-6 mb-8">
+        <p className="text-gray-400">Analytics data unavailable. Make sure the database migration has been run.</p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="bg-gray-900/50 rounded-xl p-6 mb-8">
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex items-center gap-3">
+          <BarChart3 className="w-6 h-6 text-blue-400" />
+          <h2 className="text-xl font-bold text-white">Analytics Dashboard</h2>
+        </div>
+        <select
+          value={timeRange}
+          onChange={(e) => setTimeRange(Number(e.target.value))}
+          className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value={7}>Last 7 days</option>
+          <option value={30}>Last 30 days</option>
+          <option value={90}>Last 90 days</option>
+        </select>
+      </div>
+
+      {/* Stats Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div className="bg-gray-800/50 rounded-lg p-4">
+          <div className="flex items-center gap-3 mb-2">
+            <Eye className="w-5 h-5 text-green-400" />
+            <span className="text-sm text-gray-400">Total Page Views</span>
+          </div>
+          <div className="text-2xl font-bold text-white">{stats.totalPageViews.toLocaleString()}</div>
+        </div>
+
+        <div className="bg-gray-800/50 rounded-lg p-4">
+          <div className="flex items-center gap-3 mb-2">
+            <TrendingUp className="w-5 h-5 text-blue-400" />
+            <span className="text-sm text-gray-400">Project Views</span>
+          </div>
+          <div className="text-2xl font-bold text-white">{stats.totalProjectViews.toLocaleString()}</div>
+        </div>
+
+        <div className="bg-gray-800/50 rounded-lg p-4">
+          <div className="flex items-center gap-3 mb-2">
+            <Calendar className="w-5 h-5 text-purple-400" />
+            <span className="text-sm text-gray-400">Avg. Daily Views</span>
+          </div>
+          <div className="text-2xl font-bold text-white">
+            {Math.round((stats.totalPageViews + stats.totalProjectViews) / timeRange)}
+          </div>
+        </div>
+
+        <div className="bg-gray-800/50 rounded-lg p-4">
+          <div className="flex items-center gap-3 mb-2">
+            <BarChart3 className="w-5 h-5 text-orange-400" />
+            <span className="text-sm text-gray-400">Top Project Views</span>
+          </div>
+          <div className="text-2xl font-bold text-white">{stats.topProjects[0]?.view_count || 0}</div>
+        </div>
+      </div>
+
+      {/* Top Projects and Pages */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h3 className="text-lg font-semibold text-white mb-3">Most Viewed Projects</h3>
+          <div className="space-y-2">
+            {stats.topProjects.slice(0, 5).map((project, index) => (
+              <div key={project.project_id} className="flex items-center justify-between bg-gray-800/30 rounded-lg p-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-xs font-bold text-white">
+                    {index + 1}
+                  </div>
+                  <span className="text-white font-medium">{project.title}</span>
+                </div>
+                <span className="text-gray-400 text-sm">{project.view_count} views</span>
+              </div>
+            ))}
+            {stats.topProjects.length === 0 && <p className="text-gray-500 text-sm">No project views yet</p>}
+          </div>
+        </div>
+
+        <div>
+          <h3 className="text-lg font-semibold text-white mb-3">Page Views</h3>
+          <div className="space-y-2">
+            {stats.recentViews.slice(0, 5).map((page, index) => (
+              <div key={page.page_path} className="flex items-center justify-between bg-gray-800/30 rounded-lg p-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-xs font-bold text-white">
+                    {index + 1}
+                  </div>
+                  <span className="text-white font-medium">{page.page_path}</span>
+                </div>
+                <span className="text-gray-400 text-sm">{page.view_count} views</span>
+              </div>
+            ))}
+            {stats.recentViews.length === 0 && <p className="text-gray-500 text-sm">No page views yet</p>}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 function SortableProjectCard({
   project,
@@ -414,6 +572,8 @@ export default function AdminPage() {
                 Add Project
               </button>
             </div>
+
+            <AnalyticsDashboard />
 
             {!orderingAvailable && (
               <div className="bg-yellow-900/20 border border-yellow-600/30 rounded-lg p-4 mb-6">

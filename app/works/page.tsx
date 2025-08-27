@@ -10,6 +10,7 @@ import PageTransition from "@/components/PageTransition"
 import ProjectModal from "@/components/ProjectModal"
 import { fetchProjects, type Project } from "@/lib/projects"
 import ImageSkeleton from "@/components/ui/image-skeleton"
+import { usePageView, trackProjectView } from "@/hooks/useAnalytics"
 
 const ProjectComponent = ({ project, hoveredItem, setHoveredItem, onProjectClick }: any) => {
   return (
@@ -121,6 +122,8 @@ export default function WorksPage() {
   const [isTransitioning, setIsTransitioning] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  usePageView("/works")
+
   useEffect(() => {
     // Disable browser's scroll restoration
     if ("scrollRestoration" in history) {
@@ -174,7 +177,8 @@ export default function WorksPage() {
     loadProjects()
   }, [])
 
-  const handleProjectClick = (project: any, startImageIndex = 0) => {
+  const handleProjectClick = async (project: any, startImageIndex = 0) => {
+    await trackProjectView(project.id)
     setSelectedProject({ ...project, startImageIndex })
     setIsModalOpen(true)
   }
