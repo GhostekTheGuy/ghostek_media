@@ -38,9 +38,8 @@ export default function HeroSection() {
         projects.forEach((p) => {
           if (p.main_image) imgs.push(p.main_image)
           if (p.sub_images) imgs.push(...p.sub_images)
-          if (p.additional_images) imgs.push(...p.additional_images)
         })
-        setImages(imgs)
+        setImages(imgs.slice(0, 20))
       })
       .catch(() => {})
   }, [])
