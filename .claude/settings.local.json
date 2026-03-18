@@ -8,7 +8,13 @@
       "WebFetch(domain:fonts.googleapis.com)",
       "Bash(cp \"c:/Users/ghost/Downloads/Group 6.svg\" \"G:/Obrazy/2k26/3/5zadanko brave-new/ghostek_media/public/logos/szponthub.svg\")",
       "Bash(cp \"c:/Users/ghost/Downloads/sfd_logo.png\" \"G:/Obrazy/2k26/3/5zadanko brave-new/ghostek_media/public/logos/sfd.png\")",
-      "Bash(bun remove:*)"
+      "Bash(bun remove:*)",
+      "WebFetch(domain:pro.tailark.com)",
+      "Bash(node -e \"const si = require\\(''react-icons/si''\\); const names = Object.keys\\(si\\).filter\\(k => k.toLowerCase\\(\\).includes\\(''adobe''\\) || k.toLowerCase\\(\\).includes\\(''after''\\)\\); console.log\\(names.join\\(''\\\\n''\\)\\)\")",
+      "Bash(node -e \"const si = require\\(''react-icons/si''\\); const names = Object.keys\\(si\\).filter\\(k => k.toLowerCase\\(\\).includes\\(''adobe''\\) || k.toLowerCase\\(\\).includes\\(''photoshop''\\) || k.toLowerCase\\(\\).includes\\(''illustr''\\)\\); console.log\\(names.join\\(''\\\\n''\\)\\)\")",
+      "Bash(node -e \"const si = require\\(''react-icons/si''\\); const names = Object.keys\\(si\\).filter\\(k => k.toLowerCase\\(\\).includes\\(''visual''\\) || k.toLowerCase\\(\\).includes\\(''vscode''\\) || k.toLowerCase\\(\\).includes\\(''cursor''\\)\\); console.log\\(names.join\\(''\\\\n''\\)\\)\")",
+      "Bash(node -e \"const si = require\\(''react-icons/si''\\); const check = [''SiReact'',''SiNextdotjs'',''SiTypescript'',''SiTailwindcss'',''SiFigma'',''SiFramer'',''SiVercel'',''SiGit'',''SiGithub'',''SiNodedotjs'',''SiPostgresql'',''SiPrisma'',''SiStripe'',''SiSupabase'',''SiBlender'',''SiNotion'']; check.forEach\\(n => console.log\\(n, !!si[n]\\)\\)\")",
+      "Bash(node -e \"const si = require\\(''react-icons/si''\\); [''SiReact'',''SiNextdotjs'',''SiTypescript'',''SiTailwindcss'',''SiFigma'',''SiFramer'',''SiVercel'',''SiGit'',''SiGithub'',''SiNodedotjs'',''SiPostgresql'',''SiPrisma'',''SiStripe'',''SiSupabase'',''SiBlender'',''SiNotion''].forEach\\(n => console.log\\(n, n in si\\)\\)\")"
     ]
   }
 }
