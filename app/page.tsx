@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useEffect, useMemo } from "react"
 import { ThreeDMarquee } from "@/components/ui/3d-marquee"
 import BlurText from "@/components/ui/blur-text"
 import { CursorTrail } from "@/components/ui/cursor-trail"
@@ -11,6 +12,7 @@ import PageTransition from "@/components/PageTransition"
 import LogoLoop from "@/components/ui/logo-loop"
 import { useMobileMenu } from "@/contexts/MobileMenuContext"
 import { usePageView } from "@/hooks/useAnalytics"
+import { fetchProjects } from "@/lib/projects"
 
 const clientLogos = [
   { src: "/logos/axelote.svg", alt: "Axelote", title: "Axelote" },
@@ -19,35 +21,29 @@ const clientLogos = [
   { src: "/logos/mymidwife.png", alt: "MyMidwife", title: "MyMidwife" },
   { src: "/logos/rozm.png", alt: "Rozm", title: "Rozm" },
   { src: "/logos/winogrona-art.svg", alt: "Winogrona Art", title: "Winogrona Art", scale: 1.5 },
+  { src: "/logos/interstalar.png", alt: "Interstalar", title: "Interstalar", scale: 0.5 },
+  { src: "/logos/logo_light.png", alt: "Logo Light", title: "Logo Light", scale: 0.7 },
 ]
 
 export default function HeroSection() {
   const { isOpen: isMobileMenuOpen } = useMobileMenu()
+  const [images, setImages] = useState<string[]>([])
 
   usePageView("/")
 
-  const images = [
-    "https://media.licdn.com/dms/image/v2/C4E16AQGQsDC9lE5J2Q/profile-displaybackgroundimage-shrink_350_1400/profile-displaybackgroundimage-shrink_350_1400/0/1652007818718?e=1758153600&v=beta&t=p1ODboh1IEEaaboALO1M-4-oS8RpKU31aFqmxJdsIaA",
-    "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-DAfEKbMghTXdzlM9.png&w=1080&q=75",
-    "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-KlAGBt5akn3L03Th.png&w=1080&q=75",
-    "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-3dP7shP57SurXcbr.png&w=1080&q=75",
-    "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-mYBS5lSI0UzcRMAB.png&w=1080&q=75",
-    "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-inIAtYLhE85QNNV9.png&w=1080&q=75",
-    "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-sjytiBjKsC74kjCx.png&w=2048&q=75",
-    "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-a7TgiczuNg3tXFWk.png&w=1080&q=75",
-    "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-EnoK7bi5ENxXh9rx.png&w=1080&q=75",
-    "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-TSoV3WKWkeEOcsHZ.png&w=1080&q=75",
-    "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-hB81TXyxpapF1bOX.png&w=1080&q=75",
-    "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-obcw9fwGJT0aKFD4.png&w=1080&q=75",
-    "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-GENU1u4tkPkF1sFu.jpg&w=1080&q=75",
-    "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-LDyKPWIcmHulDwCR.png&w=1080&q=75",
-    "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-LCPKlqXUc45fOHeJ.png&w=1080&q=75",
-    "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-1npbgNJIti3E0HHR.png&w=1080&q=75",
-    "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-UydxLmpVJA4WuXyA.png&w=1080&q=75",
-    "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-DAfEKbMghTXdzlM9.png&w=1080&q=75",
-    "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-mI3uEZgnnLv73fo9.png&w=1080&q=75",
-    "https://ghostek-portfolio.vercel.app/_next/image?url=https%3A%2F%2Fpcpeog9cojfqe29e.public.blob.vercel-storage.com%2Fphoto-UklXX9pFcd0NlDmd.png&w=1080&q=75",
-  ]
+  useEffect(() => {
+    fetchProjects()
+      .then((projects) => {
+        const imgs: string[] = []
+        projects.forEach((p) => {
+          if (p.main_image) imgs.push(p.main_image)
+          if (p.sub_images) imgs.push(...p.sub_images)
+          if (p.additional_images) imgs.push(...p.additional_images)
+        })
+        setImages(imgs)
+      })
+      .catch(() => {})
+  }, [])
 
   return (
     <PageTransition>
@@ -62,9 +58,11 @@ export default function HeroSection() {
         {/* Hero Section */}
         <div id="hero-section" className="min-h-screen relative md:cursor-none">
           {/* 3D Marquee Background */}
-          <div className="absolute inset-0 opacity-15">
-            <ThreeDMarquee images={images} className="h-full w-full rounded-none" />
-          </div>
+          {images.length > 0 && (
+            <div className="absolute inset-0 opacity-15">
+              <ThreeDMarquee images={images} className="h-full w-full rounded-none" />
+            </div>
+          )}
 
           {/* Vignette Effect */}
           <div
@@ -143,25 +141,25 @@ export default function HeroSection() {
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Trusted By */}
-        <div className="relative z-20 bg-black border-t border-b border-white/5">
-          <p className="text-center text-white/30 text-xs uppercase tracking-[0.3em] pt-6 pb-2">Trusted by</p>
-        <div className="h-[80px]">
-          <LogoLoop
-            logos={clientLogos}
-            speed={60}
-            direction="left"
-            logoHeight={35}
-            gap={120}
-            hoverSpeed={0}
-            scaleOnHover
-            fadeOut
-            fadeOutColor="#000000"
-            ariaLabel="Trusted by"
-          />
-        </div>
+          {/* Trusted By */}
+          <div className="relative z-20 border-t border-white/5">
+            <p className="text-center text-white/30 text-xs uppercase tracking-[0.3em] pt-6 pb-2">Trusted by</p>
+            <div className="h-[80px]">
+              <LogoLoop
+                logos={clientLogos}
+                speed={60}
+                direction="left"
+                logoHeight={35}
+                gap={120}
+                hoverSpeed={0}
+                scaleOnHover
+                fadeOut
+                fadeOutColor="#000000"
+                ariaLabel="Trusted by"
+              />
+            </div>
+          </div>
         </div>
 
         {/* About Section */}

@@ -14,7 +14,13 @@
       "Bash(node -e \"const si = require\\(''react-icons/si''\\); const names = Object.keys\\(si\\).filter\\(k => k.toLowerCase\\(\\).includes\\(''adobe''\\) || k.toLowerCase\\(\\).includes\\(''photoshop''\\) || k.toLowerCase\\(\\).includes\\(''illustr''\\)\\); console.log\\(names.join\\(''\\\\n''\\)\\)\")",
       "Bash(node -e \"const si = require\\(''react-icons/si''\\); const names = Object.keys\\(si\\).filter\\(k => k.toLowerCase\\(\\).includes\\(''visual''\\) || k.toLowerCase\\(\\).includes\\(''vscode''\\) || k.toLowerCase\\(\\).includes\\(''cursor''\\)\\); console.log\\(names.join\\(''\\\\n''\\)\\)\")",
       "Bash(node -e \"const si = require\\(''react-icons/si''\\); const check = [''SiReact'',''SiNextdotjs'',''SiTypescript'',''SiTailwindcss'',''SiFigma'',''SiFramer'',''SiVercel'',''SiGit'',''SiGithub'',''SiNodedotjs'',''SiPostgresql'',''SiPrisma'',''SiStripe'',''SiSupabase'',''SiBlender'',''SiNotion'']; check.forEach\\(n => console.log\\(n, !!si[n]\\)\\)\")",
-      "Bash(node -e \"const si = require\\(''react-icons/si''\\); [''SiReact'',''SiNextdotjs'',''SiTypescript'',''SiTailwindcss'',''SiFigma'',''SiFramer'',''SiVercel'',''SiGit'',''SiGithub'',''SiNodedotjs'',''SiPostgresql'',''SiPrisma'',''SiStripe'',''SiSupabase'',''SiBlender'',''SiNotion''].forEach\\(n => console.log\\(n, n in si\\)\\)\")"
+      "Bash(node -e \"const si = require\\(''react-icons/si''\\); [''SiReact'',''SiNextdotjs'',''SiTypescript'',''SiTailwindcss'',''SiFigma'',''SiFramer'',''SiVercel'',''SiGit'',''SiGithub'',''SiNodedotjs'',''SiPostgresql'',''SiPrisma'',''SiStripe'',''SiSupabase'',''SiBlender'',''SiNotion''].forEach\\(n => console.log\\(n, n in si\\)\\)\")",
+      "Bash(bun install:*)",
+      "Bash(bun dev:*)",
+      "Bash(find /Users/ghost/Documents/GitHub/ghostek_media/public -type f \\\\\\(-iname *adobe* -o -iname *photoshop* -o -iname *illustrator* -o -iname *premiere* -o -iname *indesign* \\\\\\))",
+      "Bash(find /Users/ghost/Documents/GitHub/ghostek_media -type f -name *.json -o -name *.md)",
+      "Bash(find /Users/ghost/Documents/GitHub/ghostek_media/src -type f \\\\\\(-name *.tsx -o -name *.ts \\\\\\))",
+      "Bash(grep -ri SiAdobe /Users/ghost/Documents/GitHub/ghostek_media/node_modules/react-icons/ --include=*.d.ts -l)"
     ]
   }
 }
