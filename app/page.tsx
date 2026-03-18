@@ -8,8 +8,18 @@ import AboutSection from "@/components/AboutSection"
 import { Button } from "@/components/ui/button"
 import Navbar from "@/components/Navbar"
 import PageTransition from "@/components/PageTransition"
+import LogoLoop from "@/components/ui/logo-loop"
 import { useMobileMenu } from "@/contexts/MobileMenuContext"
 import { usePageView } from "@/hooks/useAnalytics"
+
+const clientLogos = [
+  { src: "/logos/axelote.svg", alt: "Axelote", title: "Axelote" },
+  { src: "/logos/szponthub.svg", alt: "SzpontHub", title: "SzpontHub" },
+  { src: "/logos/sfd.png", alt: "SFD", title: "SFD" },
+  { src: "/logos/mymidwife.png", alt: "MyMidwife", title: "MyMidwife" },
+  { src: "/logos/rozm.png", alt: "Rozm", title: "Rozm" },
+  { src: "/logos/winogrona-art.svg", alt: "Winogrona Art", title: "Winogrona Art", scale: 1.5 },
+]
 
 export default function HeroSection() {
   const { isOpen: isMobileMenuOpen } = useMobileMenu()
@@ -135,8 +145,27 @@ export default function HeroSection() {
           </div>
         </div>
 
+        {/* Trusted By */}
+        <div className="relative z-20 bg-black border-t border-b border-white/5">
+          <p className="text-center text-white/30 text-xs uppercase tracking-[0.3em] pt-6 pb-2">Trusted by</p>
+        <div className="h-[80px]">
+          <LogoLoop
+            logos={clientLogos}
+            speed={60}
+            direction="left"
+            logoHeight={35}
+            gap={120}
+            hoverSpeed={0}
+            scaleOnHover
+            fadeOut
+            fadeOutColor="#000000"
+            ariaLabel="Trusted by"
+          />
+        </div>
+        </div>
+
         {/* About Section */}
-        <div className="-mt-40">
+        <div className="">
           <AboutSection />
         </div>
 
