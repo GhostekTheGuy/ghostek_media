@@ -1,30 +1,32 @@
-# Hero section with images
+# Ghostek Media
 
-*Automatically synced with your [v0.app](https://v0.app) deployments*
+Portfolio i showcase kreatywnych projektów — interaktywna strona z animacjami, galerią prac i panelem admina.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/ghosteks-projects/v0-hero-section-with-images)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/projects/2irxy9W8LrC)
+## Stack
 
-## Overview
+- Next.js 14 / React 18
+- TailwindCSS + Framer Motion
+- Neon Database (PostgreSQL serverless)
+- Vercel Blob (storage obrazów)
+- Radix UI, dnd-kit, Lenis
 
-This repository will stay in sync with your deployed chats on [v0.app](https://v0.app).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.app](https://v0.app).
+## Uruchomienie
 
-## Deployment
+```bash
+bun install
+bun dev
+```
 
-Your project is live at:
+## Zmienne środowiskowe
 
-**[https://vercel.com/ghosteks-projects/v0-hero-section-with-images](https://vercel.com/ghosteks-projects/v0-hero-section-with-images)**
+| Zmienna | Opis |
+|---|---|
+| `DATABASE_URL` | Connection string do PostgreSQL (Neon) |
+| `BLOB_READ_WRITE_TOKEN` | Token do Vercel Blob Storage |
 
-## Build your app
+## Funkcje
 
-Continue building your app on:
-
-**[https://v0.app/chat/projects/2irxy9W8LrC](https://v0.app/chat/projects/2irxy9W8LrC)**
-
-## How It Works
-
-1. Create and modify your project using [v0.app](https://v0.app)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+- **Strona główna** — hero z animacjami 3D, marquee, cursor trail
+- **Works** — galeria projektów z modalem i lightboxem
+- **Admin** (`/admin`) — CRUD projektów, drag-and-drop reordering obrazów, upload, dashboard analityczny
+- **Analityka** — tracking odsłon stron i projektów

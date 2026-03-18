@@ -29,27 +29,10 @@ export interface UpdateProjectData extends Partial<CreateProjectData> {}
 
 export async function getAllProjects(): Promise<Project[]> {
   try {
-    const columnCheck = await sql`
-      SELECT column_name 
-      FROM information_schema.columns 
-      WHERE table_name = 'projects' AND column_name = 'order_position'
+    const projects = await sql`
+      SELECT * FROM projects
+      ORDER BY order_position ASC, created_at DESC
     `
-
-    let projects
-    if (columnCheck.length > 0) {
-      // Column exists, use it for ordering
-      projects = await sql`
-        SELECT * FROM projects 
-        ORDER BY order_position ASC, created_at DESC
-      `
-    } else {
-      // Column doesn't exist yet, fallback to creation date ordering
-      projects = await sql`
-        SELECT *, 0 as order_position FROM projects 
-        ORDER BY created_at DESC
-      `
-    }
-
     return projects as Project[]
   } catch (error) {
     console.error("Error fetching projects:", error)
@@ -121,19 +104,6 @@ export async function deleteProject(id: number): Promise<boolean> {
 
 export async function reorderProjects(projectId: number, direction: "up" | "down"): Promise<void> {
   try {
-    const columnCheck = await sql`
-      SELECT column_name 
-      FROM information_schema.columns 
-      WHERE table_name = 'projects' AND column_name = 'order_position'
-    `
-
-    if (columnCheck.length === 0) {
-      throw new Error(
-        "Project ordering is not available. Please run the database migration to add the order_position column.",
-      )
-    }
-
-    // Get current project and its order position
     const currentProject = await sql`
       SELECT id, order_position FROM projects WHERE id = ${projectId}
     `
@@ -181,20 +151,8 @@ export async function reorderProjects(projectId: number, direction: "up" | "down
 
 export async function updateProjectOrder(id: number, orderPosition: number): Promise<void> {
   try {
-    const columnCheck = await sql`
-      SELECT column_name 
-      FROM information_schema.columns 
-      WHERE table_name = 'projects' AND column_name = 'order_position'
-    `
-
-    if (columnCheck.length === 0) {
-      throw new Error(
-        "Project ordering is not available. Please run the database migration to add the order_position column.",
-      )
-    }
-
     await sql`
-      UPDATE projects 
+      UPDATE projects
       SET order_position = ${orderPosition}, updated_at = NOW()
       WHERE id = ${id}
     `

@@ -34,16 +34,6 @@ export interface AnalyticsStats {
   }>
 }
 
-async function checkAnalyticsTablesExist(): Promise<boolean> {
-  try {
-    await sql`SELECT 1 FROM page_views LIMIT 1`
-    await sql`SELECT 1 FROM project_views LIMIT 1`
-    return true
-  } catch (error) {
-    return false
-  }
-}
-
 // Record a page view
 export async function recordPageView(
   pagePath: string,
@@ -52,12 +42,6 @@ export async function recordPageView(
   referrer?: string,
 ): Promise<void> {
   try {
-    const tablesExist = await checkAnalyticsTablesExist()
-    if (!tablesExist) {
-      console.warn("Analytics tables not found. Please run the analytics migration script.")
-      return
-    }
-
     await sql`
       INSERT INTO page_views (page_path, user_agent, ip_address, referrer)
       VALUES (${pagePath}, ${userAgent || null}, ${ipAddress || null}, ${referrer || null})
@@ -75,12 +59,6 @@ export async function recordProjectView(
   referrer?: string,
 ): Promise<void> {
   try {
-    const tablesExist = await checkAnalyticsTablesExist()
-    if (!tablesExist) {
-      console.warn("Analytics tables not found. Please run the analytics migration script.")
-      return
-    }
-
     await sql`
       INSERT INTO project_views (project_id, user_agent, ip_address, referrer)
       VALUES (${projectId}, ${userAgent || null}, ${ipAddress || null}, ${referrer || null})
@@ -93,17 +71,6 @@ export async function recordProjectView(
 // Get analytics statistics
 export async function getAnalyticsStats(days = 30): Promise<AnalyticsStats> {
   try {
-    const tablesExist = await checkAnalyticsTablesExist()
-    if (!tablesExist) {
-      console.warn("Analytics tables not found. Please run the analytics migration script.")
-      return {
-        totalPageViews: 0,
-        totalProjectViews: 0,
-        topProjects: [],
-        recentViews: [],
-      }
-    }
-
     const dateThreshold = new Date()
     dateThreshold.setDate(dateThreshold.getDate() - days)
 
@@ -178,5 +145,10 @@ export async function getAnalyticsStats(days = 30): Promise<AnalyticsStats> {
 }
 
 export async function isAnalyticsAvailable(): Promise<boolean> {
-  return await checkAnalyticsTablesExist()
+  try {
+    await sql`SELECT 1 FROM page_views LIMIT 1`
+    return true
+  } catch {
+    return false
+  }
 }

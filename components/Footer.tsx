@@ -156,7 +156,7 @@ const MainFooterContent = ({ scrollProgress }: { scrollProgress: any }) => {
           viewport={{ once: true }}
           className="text-center pt-10 border-t border-red-500/20 mt-10 md:mt-20"
         >
-          <p className="text-gray-500 text-sm tracking-wider">© 2024 HUBERT KOLEJKO. ALL RIGHTS RESERVED.</p>
+          <p className="text-gray-500 text-sm tracking-wider">© 2026 HUBERT KOLEJKO. ALL RIGHTS RESERVED.</p>
         </motion.div>
       </div>
     </motion.div>
