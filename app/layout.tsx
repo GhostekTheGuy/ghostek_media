@@ -18,6 +18,27 @@ export const metadata: Metadata = {
   title: "ghostek-media",
   description: "get ready for masterpiece",
   generator: "cool",
+  openGraph: {
+    title: "Hubert Kolejko — Product Designer & Developer",
+    description: "Combining design expertise with full-stack development to create visually appealing and user-friendly digital experiences.",
+    url: "https://ghostekmedia.site",
+    siteName: "ghostek-media",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Hubert Kolejko — Creative. Technical.",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Hubert Kolejko — Product Designer & Developer",
+    description: "Combining design expertise with full-stack development to create visually appealing and user-friendly digital experiences.",
+    images: ["/og-image.png"],
+  },
 }
 
 export default function RootLayout({
