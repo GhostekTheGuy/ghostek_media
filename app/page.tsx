@@ -48,7 +48,8 @@ export default function HeroSection() {
           if (p.main_image) imgs.push(p.main_image)
           if (p.sub_images) imgs.push(...p.sub_images)
         })
-        setImages(imgs.slice(0, 20))
+        const isMobile = window.innerWidth < 768
+        setImages(imgs.slice(0, isMobile ? 8 : 20))
       })
       .catch(() => {})
   }, [])
