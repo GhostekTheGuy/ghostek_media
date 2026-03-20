@@ -3,9 +3,10 @@ import { del } from "@vercel/blob"
 import { getProjectById, updateProject, deleteProject, type UpdateProjectData } from "@/lib/database"
 
 // GET - Fetch single project
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const projectId = Number.parseInt(params.id)
+    const { id } = await params
+    const projectId = Number.parseInt(id)
     const project = await getProjectById(projectId)
 
     if (!project) {
@@ -20,16 +21,18 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 }
 
 // PUT - Update project
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const projectId = Number.parseInt(params.id)
+    const { id } = await params
+    const projectId = Number.parseInt(id)
     const body = await request.json()
-    const { title, subtitle, category, main_image, sub_images, additional_images } = body
+    const { title, subtitle, description, category, main_image, sub_images, additional_images } = body
 
     const updateData: UpdateProjectData = {}
 
     if (title !== undefined) updateData.title = title
     if (subtitle !== undefined) updateData.subtitle = subtitle
+    if (description !== undefined) updateData.description = description
     if (category !== undefined) updateData.category = category
     if (main_image !== undefined) updateData.main_image = main_image
     if (sub_images !== undefined) updateData.sub_images = sub_images
@@ -49,9 +52,10 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 // DELETE - Delete project
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const projectId = Number.parseInt(params.id)
+    const { id } = await params
+    const projectId = Number.parseInt(id)
 
     const project = await getProjectById(projectId)
 

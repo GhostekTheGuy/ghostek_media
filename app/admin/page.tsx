@@ -414,6 +414,7 @@ export default function AdminPage() {
     setFormData({
       title: project.title || "",
       subtitle: project.subtitle || "",
+      description: project.description || "",
       category: project.category || "",
       main_image: project.main_image || "",
       sub_images: [...(project.sub_images || []), "", "", ""].slice(0, 3),
@@ -703,6 +704,16 @@ export default function AdminPage() {
                       />
                     </div>
 
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">Description</label>
+                      <textarea
+                        value={formData.description}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
+                        className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent min-h-[100px] resize-y"
+                        placeholder="Project description..."
+                      />
+                    </div>
+
                     {/* Main Image */}
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">Main Image *</label>
@@ -875,6 +886,7 @@ export default function AdminPage() {
 interface ProjectFormData {
   title: string
   subtitle: string
+  description: string
   category: string
   main_image: string
   sub_images: string[]
@@ -884,6 +896,7 @@ interface ProjectFormData {
 const initialFormData: ProjectFormData = {
   title: "",
   subtitle: "",
+  description: "",
   category: "",
   main_image: "",
   sub_images: ["", "", ""],

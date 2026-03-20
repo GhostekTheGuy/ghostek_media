@@ -31,7 +31,13 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(ls:*)",
+      "Bash(curl -s http://localhost:3000/api/projects)",
+      "Bash(python3 -c \"import sys,json; [print\\(p[''''id'''']\\) for p in json.load\\(sys.stdin\\)[''''projects'''']]\")",
+      "Bash(curl -s http://localhost:3000/api/projects/3)",
+      "Bash(export DATABASE_URL='postgres://neondb_owner:npg_NxV2rXU5WehP@ep-cool-wave-a2i5e13s-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require')",
+      "Bash(node -e \":*)"
     ]
   }
 }

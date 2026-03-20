@@ -7,11 +7,11 @@ import Footer from "@/components/Footer"
 import { ChevronRight } from "lucide-react"
 import Navbar from "@/components/Navbar"
 import PageTransition from "@/components/PageTransition"
-import ProjectModal from "@/components/ProjectModal"
 import { fetchProjects, type Project } from "@/lib/projects"
 import ImageSkeleton from "@/components/ui/image-skeleton"
-import { usePageView, trackProjectView } from "@/hooks/useAnalytics"
+import { usePageView } from "@/hooks/useAnalytics"
 import { useTranslation } from "react-i18next"
+import ProjectDrawer from "@/components/ProjectDrawer"
 
 const ProjectComponent = ({ project, hoveredItem, setHoveredItem, onProjectClick }: any) => {
   return (
@@ -78,7 +78,7 @@ const ProjectComponent = ({ project, hoveredItem, setHoveredItem, onProjectClick
             className="relative aspect-square overflow-hidden cursor-pointer group rounded-lg"
             onMouseEnter={() => setHoveredItem(`${project.id}-sub-${index}`)}
             onMouseLeave={() => setHoveredItem(null)}
-            onClick={() => onProjectClick(project, index + 1)}
+            onClick={() => onProjectClick(project)}
           >
             <div
               className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
@@ -116,12 +116,12 @@ const ProjectComponent = ({ project, hoveredItem, setHoveredItem, onProjectClick
 
 export default function WorksPage() {
   const [hoveredItem, setHoveredItem] = useState<string | number | null>(null)
-  const [selectedProject, setSelectedProject] = useState<any>(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
   const [isTransitioning, setIsTransitioning] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const { t } = useTranslation()
 
   usePageView("/works")
@@ -166,8 +166,8 @@ export default function WorksPage() {
           setLoading(false)
           setTimeout(() => {
             setIsTransitioning(false)
-          }, 300) // Allow time for content fade-in
-        }, 500) // Allow time for skeleton fade-out
+          }, 300)
+        }, 500)
       } catch (err) {
         console.error("Failed to load projects:", err)
         setError("Failed to load projects. Please try again later.")
@@ -179,15 +179,14 @@ export default function WorksPage() {
     loadProjects()
   }, [])
 
-  const handleProjectClick = async (project: any, startImageIndex = 0) => {
-    await trackProjectView(project.id)
-    setSelectedProject({ ...project, startImageIndex })
-    setIsModalOpen(true)
+  const handleProjectClick = (project: Project) => {
+    setSelectedProject(project)
+    setIsDrawerOpen(true)
   }
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false)
-    setSelectedProject(null)
+  const handleCloseDrawer = () => {
+    setIsDrawerOpen(false)
+    setTimeout(() => setSelectedProject(null), 400)
   }
 
   return (
@@ -268,10 +267,14 @@ export default function WorksPage() {
         </div>
 
         <Footer />
-
-        {/* ProjectModal component */}
-        {isModalOpen && <ProjectModal isOpen={isModalOpen} onClose={handleCloseModal} project={selectedProject} />}
       </div>
+
+      {/* Project Drawer */}
+      <ProjectDrawer
+        project={selectedProject}
+        isOpen={isDrawerOpen}
+        onClose={handleCloseDrawer}
+      />
     </PageTransition>
   )
 }

@@ -6,6 +6,7 @@ export interface Project {
   id: number
   title: string
   subtitle?: string
+  description?: string
   category: string
   main_image: string
   sub_images: string[]
@@ -18,6 +19,7 @@ export interface Project {
 export interface CreateProjectData {
   title: string
   subtitle?: string
+  description?: string
   category: string
   main_image: string
   sub_images: string[]
@@ -56,8 +58,8 @@ export async function getProjectById(id: number): Promise<Project | null> {
 export async function createProject(data: CreateProjectData): Promise<Project> {
   try {
     const projects = await sql`
-      INSERT INTO projects (title, subtitle, category, main_image, sub_images, additional_images, order_position)
-      VALUES (${data.title}, ${data.subtitle || null}, ${data.category}, ${data.main_image}, ${data.sub_images}, ${data.additional_images}, ${data.order_position})
+      INSERT INTO projects (title, subtitle, description, category, main_image, sub_images, additional_images, order_position)
+      VALUES (${data.title}, ${data.subtitle || null}, ${data.description || ''}, ${data.category}, ${data.main_image}, ${data.sub_images}, ${data.additional_images}, ${data.order_position})
       RETURNING *
     `
     return projects[0] as Project
@@ -74,6 +76,7 @@ export async function updateProject(id: number, data: UpdateProjectData): Promis
       SET 
         title = COALESCE(${data.title}, title),
         subtitle = COALESCE(${data.subtitle}, subtitle),
+        description = COALESCE(${data.description}, description),
         category = COALESCE(${data.category}, category),
         main_image = COALESCE(${data.main_image}, main_image),
         sub_images = COALESCE(${data.sub_images}, sub_images),

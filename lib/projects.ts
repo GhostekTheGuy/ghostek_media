@@ -2,6 +2,7 @@ export interface Project {
   id: number
   title: string
   subtitle: string
+  description: string
   category: string
   main_image: string
   sub_images: string[]

@@ -12,6 +12,7 @@ import {
   CheckCircle2,
 } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import Link from "next/link"
 
 const GRID_TOTAL = 20
 
@@ -328,14 +329,14 @@ export default function ServicesSection() {
             ))}
           </div>
 
-          <button className="group flex items-center gap-4 hover:opacity-80 transition-opacity">
+          <Link href="/works" className="group flex items-center gap-4 hover:opacity-80 transition-opacity">
             <span className="text-white text-sm tracking-wider uppercase">
               {t("services.explore")}
             </span>
             <div className="w-12 h-12 rounded-full bg-red-500 flex items-center justify-center text-white group-hover:scale-105 transition-transform">
               <ArrowRight className="w-5 h-5" />
             </div>
-          </button>
+          </Link>
         </div>
       </div>
     </section>

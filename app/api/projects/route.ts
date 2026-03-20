@@ -16,7 +16,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { title, subtitle, category, main_image, sub_images, additional_images } = body
+    const { title, subtitle, description, category, main_image, sub_images, additional_images } = body
 
     if (!title || !main_image) {
       return NextResponse.json({ error: "Title and main image are required" }, { status: 400 })
@@ -25,6 +25,7 @@ export async function POST(request: NextRequest) {
     const projectData: CreateProjectData = {
       title,
       subtitle: subtitle || "",
+      description: description || "",
       category: category || "uncategorized",
       main_image,
       sub_images: sub_images || [],
