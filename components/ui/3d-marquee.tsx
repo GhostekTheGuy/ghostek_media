@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-
+import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 
@@ -12,7 +12,12 @@ export const ThreeDMarquee = ({
   images: string[]
   className?: string
 }) => {
-  // Split the images array into 4 equal parts
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768)
+  }, [])
+
   const chunkSize = Math.ceil(images.length / 4)
   const chunks = Array.from({ length: 4 }, (_, colIndex) => {
     const start = colIndex * chunkSize
@@ -29,40 +34,64 @@ export const ThreeDMarquee = ({
             }}
             className="relative top-96 right-[50%] grid size-full origin-top-left grid-cols-4 gap-8 transform-3d"
           >
-            {chunks.map((subarray, colIndex) => (
-              <motion.div
-                animate={{ y: colIndex % 2 === 0 ? 100 : -100 }}
-                transition={{
-                  duration: colIndex % 2 === 0 ? 10 : 15,
-                  repeat: Number.POSITIVE_INFINITY,
-                  repeatType: "reverse",
-                }}
-                key={colIndex + "marquee"}
-                className="flex flex-col items-start gap-8"
-              >
-                <GridLineVertical className="-left-4" offset="80px" />
-                {subarray.map((image, imageIndex) => (
-                  <div className="relative" key={imageIndex + image}>
-                    <GridLineHorizontal className="-top-4" offset="20px" />
-                    <motion.img
-                      whileHover={{
-                        y: -10,
-                      }}
-                      transition={{
-                        duration: 0.3,
-                        ease: "easeInOut",
-                      }}
-                      key={imageIndex + image}
-                      src={image}
-                      alt={`Image ${imageIndex + 1}`}
-                      className="aspect-square rounded-lg object-cover ring ring-gray-950/5 hover:shadow-2xl"
-                      width={400}
-                      height={400}
-                    />
+            {chunks.map((subarray, colIndex) => {
+              // Mobile: use CSS animation instead of framer-motion
+              if (isMobile) {
+                const direction = colIndex % 2 === 0 ? "marquee-down" : "marquee-up"
+                return (
+                  <div
+                    key={colIndex + "marquee"}
+                    className={`flex flex-col items-start gap-8 animate-${direction}`}
+                    style={{
+                      animation: `${direction} ${colIndex % 2 === 0 ? 10 : 15}s ease-in-out infinite alternate`,
+                    }}
+                  >
+                    {subarray.map((image, imageIndex) => (
+                      <div className="relative" key={imageIndex + image}>
+                        <img
+                          src={image}
+                          alt={`Image ${imageIndex + 1}`}
+                          className="aspect-square rounded-lg object-cover"
+                          width={400}
+                          height={400}
+                          loading="lazy"
+                        />
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </motion.div>
-            ))}
+                )
+              }
+
+              // Desktop: full framer-motion experience
+              return (
+                <motion.div
+                  animate={{ y: colIndex % 2 === 0 ? 100 : -100 }}
+                  transition={{
+                    duration: colIndex % 2 === 0 ? 10 : 15,
+                    repeat: Number.POSITIVE_INFINITY,
+                    repeatType: "reverse",
+                  }}
+                  key={colIndex + "marquee"}
+                  className="flex flex-col items-start gap-8"
+                >
+                  <GridLineVertical className="-left-4" offset="80px" />
+                  {subarray.map((image, imageIndex) => (
+                    <div className="relative" key={imageIndex + image}>
+                      <GridLineHorizontal className="-top-4" offset="20px" />
+                      <motion.img
+                        whileHover={{ y: -10 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        src={image}
+                        alt={`Image ${imageIndex + 1}`}
+                        className="aspect-square rounded-lg object-cover ring ring-gray-950/5 hover:shadow-2xl"
+                        width={400}
+                        height={400}
+                      />
+                    </div>
+                  ))}
+                </motion.div>
+              )
+            })}
           </div>
         </div>
       </div>
