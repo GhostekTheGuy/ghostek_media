@@ -15,6 +15,7 @@ import CurtainIntro from "@/components/CurtainIntro"
 import { useMobileMenu } from "@/contexts/MobileMenuContext"
 import { usePageView } from "@/hooks/useAnalytics"
 import { fetchProjects } from "@/lib/projects"
+import { useTranslation } from "react-i18next"
 
 const clientLogos = [
   { src: "/logos/axelote.svg", alt: "Axelote", title: "Axelote" },
@@ -33,6 +34,7 @@ export default function HeroSection() {
   const { isOpen: isMobileMenuOpen } = useMobileMenu()
   const [images, setImages] = useState<string[]>([])
   const [introComplete, setIntroComplete] = useState(false)
+  const { t } = useTranslation()
 
   const handleIntroComplete = useCallback(() => setIntroComplete(true), [])
 
@@ -89,15 +91,15 @@ export default function HeroSection() {
             <div className="flex items-center justify-center min-h-[calc(100vh-120px)] relative">
               {/* Left Text */}
               <div className="absolute left-6 top-1/2 -translate-y-1/2 text-white text-sm tracking-wider hidden md:block">
-                <div>PRODUCT DESIGNER</div>
-                <div>& DEVELOPER</div>
+                <div>{t("hero.role1")}</div>
+                <div>{t("hero.role2")}</div>
               </div>
 
               {/* Center Text */}
               <div className="text-center w-full px-4">
                 <div className="flex flex-col items-center">
                   <BlurText
-                    text="CREATIVE."
+                    text={t("hero.title1")}
                     className="text-6xl sm:text-7xl md:text-9xl lg:text-[12rem] font-bold text-red-500 leading-none tracking-tight text-center"
                     delay={150}
                     animateBy="words"
@@ -111,7 +113,7 @@ export default function HeroSection() {
                   />
 
                   <BlurText
-                    text="TECHNICAL."
+                    text={t("hero.title2")}
                     className="text-6xl sm:text-7xl md:text-9xl lg:text-[12rem] font-bold text-red-500 leading-none tracking-tight text-center"
                     delay={300}
                     animateBy="words"
@@ -126,8 +128,7 @@ export default function HeroSection() {
                 </div>
 
                 <p className="text-white/80 text-lg md:text-xl mt-6 max-w-2xl mx-auto leading-relaxed">
-                  Combining design expertise with full-stack development to create visually appealing and user-friendly
-                  digital experiences.
+                  {t("hero.subtitle")}
                 </p>
 
                 <Button
@@ -138,21 +139,21 @@ export default function HeroSection() {
                       : "opacity-100 pointer-events-auto"
                   }`}
                 >
-                  {"ABOUT ME"}
+                  {t("hero.cta")}
                 </Button>
               </div>
 
               {/* Right Text */}
               <div className="absolute right-6 top-1/2 -translate-y-1/2 text-white text-sm tracking-wider hidden md:block">
-                <div>SCROLL</div>
-                <div>DOWN</div>
+                <div>{t("hero.scroll1")}</div>
+                <div>{t("hero.scroll2")}</div>
               </div>
             </div>
           </div>
 
           {/* Trusted By */}
           <div className="relative z-20 border-t border-white/5">
-            <p className="text-center text-white/30 text-xs uppercase tracking-[0.3em] pt-6 pb-2">Trusted by</p>
+            <p className="text-center text-white/30 text-xs uppercase tracking-[0.3em] pt-6 pb-2">{t("hero.trustedBy")}</p>
             <div className="h-[80px]">
               <LogoLoop
                 logos={clientLogos}

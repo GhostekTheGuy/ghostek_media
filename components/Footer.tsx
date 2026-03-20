@@ -4,6 +4,7 @@ import { useRef } from "react"
 import { useScroll, useTransform, motion } from "framer-motion"
 import BlurText from "@/components/ui/blur-text"
 import { Button } from "@/components/ui/button"
+import { useTranslation } from "react-i18next"
 
 export default function Footer() {
   const container = useRef<HTMLDivElement>(null)
@@ -22,6 +23,7 @@ export default function Footer() {
 }
 
 const MainFooterContent = ({ scrollProgress }: { scrollProgress: any }) => {
+  const { t } = useTranslation()
   const contentY = useTransform(scrollProgress, [0.3, 1], [100, 0])
   const contentOpacity = useTransform(scrollProgress, [0.3, 0.7], [0, 1])
 
@@ -32,14 +34,14 @@ const MainFooterContent = ({ scrollProgress }: { scrollProgress: any }) => {
         {/* Hero Message */}
         <div className="text-center mb-10 md:mb-20">
           <BlurText
-            text="DON'T THINK."
+            text={t("footer.title1")}
             className="text-4xl md:text-8xl lg:text-9xl font-bold text-red-500 leading-none tracking-tight mb-4"
             delay={100}
             animateBy="words"
             direction="top"
           />
           <BlurText
-            text="JUST MESSAGE ME."
+            text={t("footer.title2")}
             className="text-4xl md:text-8xl lg:text-9xl font-bold text-red-500 leading-none tracking-tight mb-8"
             delay={150}
             animateBy="words"
@@ -53,7 +55,7 @@ const MainFooterContent = ({ scrollProgress }: { scrollProgress: any }) => {
             viewport={{ once: true }}
             className="text-base md:text-lg text-gray-300 mb-8 tracking-normal"
           >
-            Tell me about your idea, your vision, or just say hi.
+            {t("footer.subtitle")}
           </motion.p>
 
           <motion.div
@@ -62,7 +64,7 @@ const MainFooterContent = ({ scrollProgress }: { scrollProgress: any }) => {
             transition={{ duration: 0.8, delay: 0.5 }}
             viewport={{ once: true }}
           >
-            <Button href="https://www.instagram.com/ohhuseenaghost/">SEND A MESSAGE</Button>
+            <Button href="https://www.instagram.com/ohhuseenaghost/">{t("footer.cta")}</Button>
           </motion.div>
         </div>
 
@@ -75,7 +77,7 @@ const MainFooterContent = ({ scrollProgress }: { scrollProgress: any }) => {
             viewport={{ once: true }}
             className="space-y-4 md:text-left text-center"
           >
-            <h3 className="text-xl md:text-2xl font-bold text-white tracking-wider">CONTACT</h3>
+            <h3 className="text-xl md:text-2xl font-bold text-white tracking-wider">{t("footer.contact")}</h3>
             <div className="space-y-2 text-gray-300">
               <p className="hover:text-red-400 transition-colors cursor-pointer text-sm md:text-base block">
                 +48 888-106-559
@@ -93,9 +95,9 @@ const MainFooterContent = ({ scrollProgress }: { scrollProgress: any }) => {
             viewport={{ once: true }}
             className="space-y-4"
           >
-            <h3 className="text-xl md:text-2xl font-bold text-white tracking-wider text-center">LOCATION</h3>
+            <h3 className="text-xl md:text-2xl font-bold text-white tracking-wider text-center">{t("footer.location")}</h3>
             <div className="space-y-2 text-gray-300">
-              <p className="hover:text-red-400 transition-colors text-center text-sm md:text-base">LUBLIN, POLAND</p>
+              <p className="hover:text-red-400 transition-colors text-center text-sm md:text-base">{t("footer.locationValue")}</p>
             </div>
           </motion.div>
 
@@ -107,7 +109,7 @@ const MainFooterContent = ({ scrollProgress }: { scrollProgress: any }) => {
             className="space-y-4 text-center"
           >
             <h3 className="text-xl md:text-2xl font-bold text-white tracking-wider text-center md:text-right">
-              SOCIAL
+              {t("footer.social")}
             </h3>
             <div className="space-y-2 text-gray-300">
               <a
@@ -156,7 +158,7 @@ const MainFooterContent = ({ scrollProgress }: { scrollProgress: any }) => {
           viewport={{ once: true }}
           className="text-center pt-10 border-t border-red-500/20 mt-10 md:mt-20"
         >
-          <p className="text-gray-500 text-sm tracking-wider">© 2026 HUBERT KOLEJKO. ALL RIGHTS RESERVED.</p>
+          <p className="text-gray-500 text-sm tracking-wider">{t("footer.copyright")}</p>
         </motion.div>
       </div>
     </motion.div>

@@ -3,6 +3,7 @@
 import { Menu, X } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useMobileMenu } from "@/contexts/MobileMenuContext"
+import { useTranslation } from "react-i18next"
 
 interface MobileMenuProps {
   className?: string
@@ -10,11 +11,16 @@ interface MobileMenuProps {
 
 export function MobileMenu({ className }: MobileMenuProps) {
   const { isOpen, toggleMenu } = useMobileMenu()
+  const { t, i18n } = useTranslation()
+
+  const toggleLanguage = () => {
+    i18n.changeLanguage(i18n.language === "en" ? "pl" : "en")
+  }
 
   const menuItems = [
-    { label: "ABOUT", href: "/#about" },
-    { label: "WORKS", href: "/works" }, // Updated to link to /works page
-    { label: "CONTACT", href: "/#footer" },
+    { label: t("nav.about"), href: "/#about" },
+    { label: t("nav.works"), href: "/works" },
+    { label: t("nav.contact"), href: "/#footer" },
   ]
 
   return (
@@ -51,7 +57,7 @@ export function MobileMenu({ className }: MobileMenuProps) {
                 <nav className="flex flex-col space-y-8">
                   {menuItems.map((item, index) => (
                     <motion.a
-                      key={item.label}
+                      key={item.href}
                       href={item.href}
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
@@ -62,6 +68,17 @@ export function MobileMenu({ className }: MobileMenuProps) {
                       {item.label}
                     </motion.a>
                   ))}
+
+                  {/* Language Switcher */}
+                  <motion.button
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.5 }}
+                    onClick={toggleLanguage}
+                    className="text-white text-xl tracking-wider hover:text-red-500 transition-colors text-left border-t border-white/10 pt-8"
+                  >
+                    {i18n.language === "en" ? "POLSKI" : "ENGLISH"}
+                  </motion.button>
                 </nav>
               </div>
             </motion.div>

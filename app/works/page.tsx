@@ -11,6 +11,7 @@ import ProjectModal from "@/components/ProjectModal"
 import { fetchProjects, type Project } from "@/lib/projects"
 import ImageSkeleton from "@/components/ui/image-skeleton"
 import { usePageView, trackProjectView } from "@/hooks/useAnalytics"
+import { useTranslation } from "react-i18next"
 
 const ProjectComponent = ({ project, hoveredItem, setHoveredItem, onProjectClick }: any) => {
   return (
@@ -121,6 +122,7 @@ export default function WorksPage() {
   const [loading, setLoading] = useState(true)
   const [isTransitioning, setIsTransitioning] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const { t } = useTranslation()
 
   usePageView("/works")
 
@@ -204,7 +206,7 @@ export default function WorksPage() {
         <div className="px-6 pb-[100px] pt-[100px]">
           <div className="max-w-[1440px] mx-auto">
             <BlurText
-              text="DIVE INTO MY WORKS"
+              text={t("works.title")}
               className="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-none tracking-tight text-center"
               delay={100}
               animateBy="words"
@@ -228,19 +230,19 @@ export default function WorksPage() {
 
             {error && (
               <div className="text-center py-20">
-                <p className="text-red-400 text-lg">{error}</p>
+                <p className="text-red-400 text-lg">{t("works.error")}</p>
                 <button
                   onClick={() => window.location.reload()}
                   className="mt-4 px-6 py-2 bg-white text-black rounded-lg hover:bg-gray-200 transition-colors"
                 >
-                  Retry
+                  {t("works.retry")}
                 </button>
               </div>
             )}
 
             {!loading && !error && projects.length === 0 && (
               <div className="text-center py-20">
-                <p className="text-gray-400 text-lg">No projects found.</p>
+                <p className="text-gray-400 text-lg">{t("works.empty")}</p>
               </div>
             )}
 

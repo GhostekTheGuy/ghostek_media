@@ -3,6 +3,7 @@
 import { MobileMenu } from "@/components/ui/mobile-menu"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
+import { useTranslation } from "react-i18next"
 
 interface NavbarProps {
   className?: string
@@ -10,6 +11,11 @@ interface NavbarProps {
 
 export default function Navbar({ className = "" }: NavbarProps) {
   const pathname = usePathname()
+  const { t, i18n } = useTranslation()
+
+  const toggleLanguage = () => {
+    i18n.changeLanguage(i18n.language === "en" ? "pl" : "en")
+  }
 
   return (
     <nav className={`flex justify-between items-center p-6 relative z-10 ${className}`}>
@@ -22,13 +28,13 @@ export default function Navbar({ className = "" }: NavbarProps) {
       </Link>
 
       {/* Desktop Navigation */}
-      <div className="hidden md:flex space-x-8 text-white text-sm tracking-wider">
+      <div className="hidden md:flex items-center space-x-8 text-white text-sm tracking-wider">
         <Link
           href="/#about"
           scroll={false}
           className="relative hover:text-red-500 cursor-pointer transition-all duration-300 hover:scale-110 hover:drop-shadow-[0_0_8px_rgba(239,68,68,0.5)] group"
         >
-          ABOUT
+          {t("nav.about")}
           <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-500 transition-all duration-300 group-hover:w-full"></span>
         </Link>
         <Link
@@ -38,7 +44,7 @@ export default function Navbar({ className = "" }: NavbarProps) {
             pathname === "/works" ? "text-red-500" : "hover:text-red-500"
           }`}
         >
-          WORKS
+          {t("nav.works")}
           <span
             className={`absolute -bottom-1 left-0 h-0.5 bg-red-500 transition-all duration-300 group-hover:w-full ${
               pathname === "/works" ? "w-full" : "w-0"
@@ -50,9 +56,17 @@ export default function Navbar({ className = "" }: NavbarProps) {
           scroll={false}
           className="relative hover:text-red-500 cursor-pointer transition-all duration-300 hover:scale-110 hover:drop-shadow-[0_0_8px_rgba(239,68,68,0.5)] group"
         >
-          CONTACT
+          {t("nav.contact")}
           <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-500 transition-all duration-300 group-hover:w-full"></span>
         </Link>
+
+        {/* Language Switcher */}
+        <button
+          onClick={toggleLanguage}
+          className="relative cursor-pointer transition-all duration-300 hover:scale-110 hover:text-red-500 hover:drop-shadow-[0_0_8px_rgba(239,68,68,0.5)] border border-white/20 px-2.5 py-1 rounded hover:border-red-500/50"
+        >
+          {i18n.language === "en" ? "PL" : "EN"}
+        </button>
       </div>
 
       {/* Mobile Menu */}

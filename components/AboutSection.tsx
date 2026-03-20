@@ -4,8 +4,10 @@ import { motion, useScroll, useTransform } from "framer-motion"
 import { useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { OrbitingCircles } from "@/components/ui/orbiting-circles"
+import { useTranslation } from "react-i18next"
 
 export default function AboutSection() {
+  const { t } = useTranslation()
   const sectionRef = useRef<HTMLElement>(null)
 
   const { scrollYProgress } = useScroll({
@@ -43,13 +45,13 @@ export default function AboutSection() {
           <motion.div style={{ opacity: headerOpacity, y: headerY }}>
             <div className="text-white/30 text-sm tracking-wider">
               <p>001</p>
-              <p>about</p>
+              <p>{t("about.label")}</p>
             </div>
           </motion.div>
 
           <motion.div style={{ opacity: headerOpacity, y: headerY }} className="max-w-xs text-right">
             <p className="text-white/40 text-sm font-light leading-relaxed">
-              Design and development have always been more than skills - they're instinct.
+              {t("about.aside")}
             </p>
           </motion.div>
         </div>
@@ -154,18 +156,18 @@ export default function AboutSection() {
             <div className="text-justify max-w-sm">
               <h2 className="text-white text-lg font-light leading-relaxed mb-6">
                 <motion.span style={{ opacity: textPart1Opacity }}>
-                  {"I'm Hubert Kolejko - I design and build digital products that people actually want to use."}
+                  {t("about.text1")}
                 </motion.span>
                 <motion.span style={{ opacity: textPart2Opacity }}>
-                  {" From pixel-perfect interfaces to full-stack applications, I bridge the gap between creative vision and technical execution."}
+                  {t("about.text2")}
                 </motion.span>
                 <motion.span style={{ opacity: textPart3Opacity, color: ctaColor }}>
-                  {" Let's turn your idea into something real."}
+                  {t("about.text3")}
                 </motion.span>
               </h2>
 
               <motion.div style={{ opacity: buttonOpacity, y: buttonY }} className="flex justify-center">
-                <Button href="/works">SEE MY WORKS</Button>
+                <Button href="/works">{t("about.cta")}</Button>
               </motion.div>
             </div>
           </div>
@@ -199,18 +201,18 @@ export default function AboutSection() {
             <div className="relative z-10 py-8 md:py-0">
               <h2 className="text-white text-2xl md:text-3xl lg:text-4xl font-light leading-tight mb-8 md:mb-12">
                 <motion.span style={{ opacity: textPart1Opacity }}>
-                  {"I'm Hubert Kolejko - I design and build digital products that people actually want to use."}
+                  {t("about.text1")}
                 </motion.span>
                 <motion.span style={{ opacity: textPart2Opacity }}>
-                  {" From pixel-perfect interfaces to full-stack applications, I bridge the gap between creative vision and technical execution."}
+                  {t("about.text2")}
                 </motion.span>
                 <motion.span style={{ opacity: textPart3Opacity, color: ctaColor }}>
-                  {" Let's turn your idea into something real."}
+                  {t("about.text3")}
                 </motion.span>
               </h2>
 
               <motion.div style={{ opacity: buttonOpacity, y: buttonY }} className="flex justify-center">
-                <Button href="/works">SEE MY WORKS</Button>
+                <Button href="/works">{t("about.cta")}</Button>
               </motion.div>
             </div>
           </motion.div>

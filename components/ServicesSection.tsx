@@ -11,6 +11,7 @@ import {
   ArrowRight,
   CheckCircle2,
 } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 const GRID_TOTAL = 20
 
@@ -92,8 +93,8 @@ function DotGrid() {
 
 interface ServiceItem {
   id: string
-  title: string
-  bottomLabel: string
+  titleKey: string
+  labelKey: string
   icon: typeof Code2
   image?: string
 }
@@ -101,35 +102,36 @@ interface ServiceItem {
 const servicesData: ServiceItem[] = [
   {
     id: "01",
-    title: "Web Development",
-    bottomLabel: "development",
+    titleKey: "services.s1.title",
+    labelKey: "services.s1.label",
     icon: Code2,
     image: "/images/keycaps.png",
   },
   {
     id: "02",
-    title: "Product Design",
-    bottomLabel: "design",
+    titleKey: "services.s2.title",
+    labelKey: "services.s2.label",
     icon: PenTool,
     image: "/images/reka.png",
   },
   {
     id: "03",
-    title: "Brand Identity",
-    bottomLabel: "branding",
+    titleKey: "services.s3.title",
+    labelKey: "services.s3.label",
     icon: Fingerprint,
     image: "/images/reka2.png",
   },
   {
     id: "04",
-    title: "Motion and 3D",
-    bottomLabel: "motion",
+    titleKey: "services.s4.title",
+    labelKey: "services.s4.label",
     icon: Orbit,
     image: "/images/ball.png",
   },
 ]
 
 export default function ServicesSection() {
+  const { t } = useTranslation()
   const [activeIndex, setActiveIndex] = useState<number>(0)
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
 
@@ -151,16 +153,16 @@ export default function ServicesSection() {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
             <div className="md:col-span-2 text-white/30 text-sm tracking-wider">
               <p>002</p>
-              <p>services</p>
+              <p>{t("services.label")}</p>
             </div>
             <div className="md:col-span-6">
               <h2 className="text-2xl md:text-3xl lg:text-4xl text-white font-light leading-tight max-w-2xl">
-                Design, code, brand, animate - end to end.
+                {t("services.heading")}
               </h2>
             </div>
             <div className="md:col-span-4 flex justify-end">
               <p className="text-white/40 text-sm max-w-[200px] text-right leading-relaxed">
-                One person. Full pipeline. No handoff friction.
+                {t("services.aside")}
               </p>
             </div>
           </div>
@@ -231,7 +233,7 @@ export default function ServicesSection() {
                   >
                     <div className="pr-4 flex flex-col h-full">
                       <h3 className="text-2xl font-medium">
-                        {item.title}
+                        {t(item.titleKey)}
                       </h3>
                       <div
                         className="absolute inset-0 top-[60px] pointer-events-none overflow-visible"
@@ -239,7 +241,7 @@ export default function ServicesSection() {
                         {item.image && (
                           <img
                             src={item.image}
-                            alt={item.title}
+                            alt={t(item.titleKey)}
                             className="w-[135%] h-[135%] object-contain absolute top-1/2 left-1/2"
                             style={{
                               mixBlendMode: "multiply",
@@ -278,7 +280,7 @@ export default function ServicesSection() {
                           : "opacity-0 lg:opacity-100 lg:-rotate-90 lg:absolute lg:bottom-[100px] lg:left-[30px] whitespace-nowrap")
                       }
                     >
-                      {item.bottomLabel}
+                      {t(item.labelKey)}
                     </span>
                   </div>
                 </div>
@@ -290,17 +292,16 @@ export default function ServicesSection() {
           <div className="hidden lg:flex flex-col w-[450px] p-10 bg-black shrink-0 justify-between">
             <div>
               <div className="flex justify-between items-center text-xs text-white/30 mb-12 uppercase tracking-[0.3em]">
-                <span>Core Services</span>
+                <span>{t("services.panel.label")}</span>
                 <span>4/4</span>
               </div>
 
               <h3 className="text-3xl text-white font-light leading-tight mb-6">
-                Everything from concept to production, under one roof
+                {t("services.panel.heading")}
               </h3>
 
               <p className="text-white/40 text-sm leading-relaxed mb-12">
-                I handle the full creative and technical stack - so your
-                project stays cohesive from first sketch to final deploy.
+                {t("services.panel.text")}
               </p>
 
               <DotGrid />
@@ -308,7 +309,7 @@ export default function ServicesSection() {
 
             <div className="flex items-center gap-3 text-white/40 text-sm border-t border-white/10 pt-6 mt-8">
               <CheckCircle2 className="w-4 h-4 text-red-500" />
-              <span>Design, develop, brand, animate.</span>
+              <span>{t("services.panel.footer")}</span>
             </div>
           </div>
         </div>
@@ -329,7 +330,7 @@ export default function ServicesSection() {
 
           <button className="group flex items-center gap-4 hover:opacity-80 transition-opacity">
             <span className="text-white text-sm tracking-wider uppercase">
-              Explore Services
+              {t("services.explore")}
             </span>
             <div className="w-12 h-12 rounded-full bg-red-500 flex items-center justify-center text-white group-hover:scale-105 transition-transform">
               <ArrowRight className="w-5 h-5" />

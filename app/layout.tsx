@@ -8,6 +8,7 @@ import { GlobalCursorDot } from "@/components/ui/cursor-trail"
 import PageTransition from "@/components/ui/page-transition"
 import { MobileMenuProvider } from "@/contexts/MobileMenuContext"
 import { ProgressiveBlur } from "@/components/ui/progressive-blur"
+import { LanguageProvider } from "@/contexts/LanguageContext"
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -15,6 +16,7 @@ const spaceGrotesk = Space_Grotesk({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://ghostekmedia.site"),
   title: "ghostek-media",
   description: "get ready for masterpiece",
   generator: "cool",
@@ -60,10 +62,12 @@ html {
       <body className={`${spaceGrotesk.variable} font-sans`}>
         <GlobalCursorDot />
         <PageTransition />
-        <MobileMenuProvider>
-          <SmoothScroll>{children}</SmoothScroll>
-          <ProgressiveBlur position="bottom" height="120px" className="fixed bottom-0 left-0 right-0 z-50" />
-        </MobileMenuProvider>
+        <LanguageProvider>
+          <MobileMenuProvider>
+            <SmoothScroll>{children}</SmoothScroll>
+            <ProgressiveBlur position="bottom" height="120px" className="fixed bottom-0 left-0 right-0 z-50" />
+          </MobileMenuProvider>
+        </LanguageProvider>
       </body>
     </html>
   )
