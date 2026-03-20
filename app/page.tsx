@@ -48,8 +48,7 @@ export default function HeroSection() {
           if (p.main_image) imgs.push(p.main_image)
           if (p.sub_images) imgs.push(...p.sub_images)
         })
-        const isMobile = window.innerWidth < 768
-        setImages(imgs.slice(0, isMobile ? 8 : 20))
+        setImages(imgs.slice(0, 20))
       })
       .catch(() => {})
   }, [])
@@ -68,12 +67,18 @@ export default function HeroSection() {
 
         {/* Hero Section */}
         <div id="hero-section" className="min-h-screen relative md:cursor-none">
-          {/* 3D Marquee Background */}
+          {/* 3D Marquee Background - desktop only */}
           {images.length > 0 && (
-            <div className="absolute inset-0 opacity-15">
+            <div className="absolute inset-0 opacity-15 hidden md:block">
               <ThreeDMarquee images={images} className="h-full w-full rounded-none" />
             </div>
           )}
+
+          {/* Static hero background - mobile only */}
+          <div
+            className="absolute inset-0 md:hidden bg-cover bg-center opacity-40"
+            style={{ backgroundImage: "url(/images/hero-mobile-bg.png)" }}
+          />
 
           {/* Vignette Effect */}
           <div
