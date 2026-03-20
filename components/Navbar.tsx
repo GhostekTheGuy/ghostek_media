@@ -4,6 +4,7 @@ import { MobileMenu } from "@/components/ui/mobile-menu"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
 import { useTranslation } from "react-i18next"
+import { FlagPL, FlagEN } from "@/components/ui/flag-icons"
 
 interface NavbarProps {
   className?: string
@@ -63,9 +64,19 @@ export default function Navbar({ className = "" }: NavbarProps) {
         {/* Language Switcher */}
         <button
           onClick={toggleLanguage}
-          className="relative cursor-pointer transition-all duration-300 hover:scale-110 hover:text-red-500 hover:drop-shadow-[0_0_8px_rgba(239,68,68,0.5)] border border-white/20 px-2.5 py-1 rounded hover:border-red-500/50"
+          className="relative cursor-pointer transition-all duration-300 hover:scale-110 hover:drop-shadow-[0_0_8px_rgba(239,68,68,0.5)] border border-white/20 px-2.5 py-1.5 rounded hover:border-red-500/50 flex items-center gap-2"
         >
-          {i18n.language === "en" ? "PL" : "EN"}
+          {i18n.language === "en" ? (
+            <>
+              <FlagPL className="w-5 h-3.5 rounded-[2px] overflow-hidden" />
+              <span>PL</span>
+            </>
+          ) : (
+            <>
+              <FlagEN className="w-5 h-3.5 rounded-[2px] overflow-hidden" />
+              <span>EN</span>
+            </>
+          )}
         </button>
       </div>
 

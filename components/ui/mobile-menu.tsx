@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useMobileMenu } from "@/contexts/MobileMenuContext"
 import { useTranslation } from "react-i18next"
+import { FlagPL, FlagEN } from "@/components/ui/flag-icons"
 
 interface MobileMenuProps {
   className?: string
@@ -75,9 +76,19 @@ export function MobileMenu({ className }: MobileMenuProps) {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.5 }}
                     onClick={toggleLanguage}
-                    className="text-white text-xl tracking-wider hover:text-red-500 transition-colors text-left border-t border-white/10 pt-8"
+                    className="text-white text-xl tracking-wider hover:text-red-500 transition-colors text-left border-t border-white/10 pt-8 flex items-center gap-3"
                   >
-                    {i18n.language === "en" ? "POLSKI" : "ENGLISH"}
+                    {i18n.language === "en" ? (
+                      <>
+                        <FlagPL className="w-7 h-5 rounded-[2px]" />
+                        <span>POLSKI</span>
+                      </>
+                    ) : (
+                      <>
+                        <FlagEN className="w-7 h-5 rounded-[2px]" />
+                        <span>ENGLISH</span>
+                      </>
+                    )}
                   </motion.button>
                 </nav>
               </div>
