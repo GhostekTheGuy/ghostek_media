@@ -80,9 +80,9 @@ export default function HeroSection() {
             style={{ backgroundImage: "url(/images/hero-mobile-bg.png)" }}
           />
 
-          {/* Vignette Effect */}
+          {/* Vignette Effect - desktop only */}
           <div
-            className="absolute inset-0 pointer-events-none z-10"
+            className="absolute inset-0 pointer-events-none z-10 hidden md:block"
             style={{
               background:
                 "radial-gradient(ellipse at center, transparent 0%, transparent 40%, rgba(0,0,0,0.4) 70%, rgba(0,0,0,0.8) 100%)",
