@@ -76,18 +76,13 @@ export function MobileMenu({ className }: MobileMenuProps) {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.5 }}
                     onClick={toggleLanguage}
-                    className="text-white text-xl tracking-wider hover:text-red-500 transition-colors text-left border-t border-white/10 pt-8 flex items-center gap-3"
+                    className="border-t border-white/10 pt-8"
+                    aria-label="Toggle language"
                   >
                     {i18n.language === "en" ? (
-                      <>
-                        <FlagPL className="w-7 h-5 rounded-[2px]" />
-                        <span>POLSKI</span>
-                      </>
+                      <FlagPL className="w-9 h-6 rounded-[3px]" />
                     ) : (
-                      <>
-                        <FlagEN className="w-7 h-5 rounded-[2px]" />
-                        <span>ENGLISH</span>
-                      </>
+                      <FlagEN className="w-9 h-6 rounded-[3px]" />
                     )}
                   </motion.button>
                 </nav>
