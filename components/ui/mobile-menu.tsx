@@ -4,7 +4,7 @@ import { Menu, X } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useMobileMenu } from "@/contexts/MobileMenuContext"
 import { useTranslation } from "react-i18next"
-import { FlagPL, FlagEN } from "@/components/ui/flag-icons"
+import { LanguageSwitcher } from "@/components/ui/language-switcher"
 
 interface MobileMenuProps {
   className?: string
@@ -12,11 +12,7 @@ interface MobileMenuProps {
 
 export function MobileMenu({ className }: MobileMenuProps) {
   const { isOpen, toggleMenu } = useMobileMenu()
-  const { t, i18n } = useTranslation()
-
-  const toggleLanguage = () => {
-    i18n.changeLanguage(i18n.language === "en" ? "pl" : "en")
-  }
+  const { t } = useTranslation()
 
   const menuItems = [
     { label: t("nav.about"), href: "/#about" },
@@ -71,20 +67,14 @@ export function MobileMenu({ className }: MobileMenuProps) {
                   ))}
 
                   {/* Language Switcher */}
-                  <motion.button
+                  <motion.div
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.5 }}
-                    onClick={toggleLanguage}
                     className="border-t border-white/10 pt-8"
-                    aria-label="Toggle language"
                   >
-                    {i18n.language === "en" ? (
-                      <FlagPL className="w-9 h-6" />
-                    ) : (
-                      <FlagEN className="w-9 h-6" />
-                    )}
-                  </motion.button>
+                    <LanguageSwitcher flagClassName="w-9 h-6" />
+                  </motion.div>
                 </nav>
               </div>
             </motion.div>

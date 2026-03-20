@@ -4,7 +4,7 @@ import { MobileMenu } from "@/components/ui/mobile-menu"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
 import { useTranslation } from "react-i18next"
-import { FlagPL, FlagEN } from "@/components/ui/flag-icons"
+import { LanguageSwitcher } from "@/components/ui/language-switcher"
 
 interface NavbarProps {
   className?: string
@@ -12,11 +12,7 @@ interface NavbarProps {
 
 export default function Navbar({ className = "" }: NavbarProps) {
   const pathname = usePathname()
-  const { t, i18n } = useTranslation()
-
-  const toggleLanguage = () => {
-    i18n.changeLanguage(i18n.language === "en" ? "pl" : "en")
-  }
+  const { t } = useTranslation()
 
   return (
     <nav className={`flex justify-between items-center p-6 relative z-10 ${className}`}>
@@ -61,18 +57,7 @@ export default function Navbar({ className = "" }: NavbarProps) {
           <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-500 transition-all duration-300 group-hover:w-full"></span>
         </Link>
 
-        {/* Language Switcher */}
-        <button
-          onClick={toggleLanguage}
-          className="cursor-pointer transition-all duration-300 hover:scale-110 hover:drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]"
-          aria-label="Toggle language"
-        >
-          {i18n.language === "en" ? (
-            <FlagPL className="w-6 h-4" />
-          ) : (
-            <FlagEN className="w-6 h-4" />
-          )}
-        </button>
+        <LanguageSwitcher />
       </div>
 
       {/* Mobile Menu */}
