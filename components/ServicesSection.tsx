@@ -138,7 +138,7 @@ export default function ServicesSection() {
 
   return (
     <section
-      className="bg-black py-32 relative overflow-hidden"
+      className="bg-black py-32 relative overflow-x-hidden"
       id="services"
       style={{ fontFamily: "var(--font-space-grotesk), system-ui, sans-serif" }}
     >
@@ -169,10 +169,87 @@ export default function ServicesSection() {
           </div>
         </motion.header>
 
-        {/* Main Accordion + Info Panel */}
-        <div className="flex flex-col lg:flex-row h-auto lg:h-[600px] border-t border-b border-white/10">
+        {/* Mobile Accordion */}
+        <div className="lg:hidden border-t border-white/10">
+          {servicesData.map((item, index) => {
+            const isActive = activeIndex === index
+            const Icon = item.icon
+
+            return (
+              <div
+                key={item.id}
+                className="border-b border-white/10 relative overflow-visible"
+              >
+                <button
+                  onClick={() => setActiveIndex(isActive ? -1 : index)}
+                  className={
+                    "w-full flex items-center justify-between p-5 transition-colors duration-300 relative z-[1] " +
+                    (isActive ? "bg-red-500 text-white" : "text-white/60")
+                  }
+                >
+                  <div className="flex items-center gap-4">
+                    <Icon className="w-5 h-5" />
+                    <span className="text-lg font-medium tracking-wide">
+                      {t(item.titleKey)}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm opacity-50">{item.id}</span>
+                    <ArrowUpRight
+                      className={
+                        "w-5 h-5 transition-transform duration-300 " +
+                        (isActive ? "rotate-90" : "rotate-0")
+                      }
+                    />
+                  </div>
+                </button>
+
+                <motion.div
+                  initial={false}
+                  animate={{
+                    height: isActive ? "auto" : 0,
+                    opacity: isActive ? 1 : 0,
+                  }}
+                  transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+                  className="overflow-hidden bg-red-500 relative z-[1]"
+                >
+                  <div className="px-5 pb-5 pt-1">
+                    <p className="text-white/80 text-sm leading-relaxed uppercase tracking-[0.2em]">
+                      {t(item.labelKey)}
+                    </p>
+                  </div>
+                </motion.div>
+
+                {/* Image that overflows into bottom-right corner */}
+                {item.image && (
+                  <motion.div
+                    initial={false}
+                    animate={{
+                      opacity: isActive ? 1 : 0,
+                      scale: isActive ? 1 : 0.8,
+                    }}
+                    transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+                    className="absolute bottom-0 right-0 w-[50%] aspect-square z-[2] pointer-events-none"
+                    style={{
+                      backgroundImage: `url(${item.image})`,
+                      backgroundSize: "contain",
+                      backgroundPosition: "right bottom",
+                      backgroundRepeat: "no-repeat",
+                      transform: "translate(15%, -10%)",
+                      maskImage: "linear-gradient(to top, transparent 5%, black 35%)",
+                      WebkitMaskImage: "linear-gradient(to top, transparent 5%, black 35%)",
+                    }}
+                  />
+                )}
+              </div>
+            )
+          })}
+        </div>
+
+        {/* Desktop Accordion + Info Panel */}
+        <div className="hidden lg:flex flex-row h-[600px] border-t border-b border-white/10">
           {/* Accordion */}
-          <div className="flex flex-col lg:flex-row flex-1 h-full overflow-hidden">
+          <div className="flex flex-row flex-1 h-full overflow-hidden">
             {servicesData.map((item, index) => {
               const isActive = activeIndex === index
               const isHovered = hoveredIndex === index
@@ -183,9 +260,7 @@ export default function ServicesSection() {
                   key={item.id}
                   onMouseEnter={() => setHoveredIndex(index)}
                   onMouseLeave={() => setHoveredIndex(null)}
-                  onClick={() =>
-                    setActiveIndex(index)
-                  }
+                  onClick={() => setActiveIndex(index)}
                   style={{
                     willChange: "flex-grow",
                     flexGrow: isActive ? 1 : 0,
@@ -195,10 +270,10 @@ export default function ServicesSection() {
                     maxWidth: isActive ? "600px" : "120px",
                   }}
                   className={
-                    "relative group h-auto lg:h-full transition-all duration-[1800ms] ease-[cubic-bezier(0.16,1,0.3,1)] cursor-pointer flex flex-col overflow-hidden " +
+                    "relative group h-full transition-all duration-[1800ms] ease-[cubic-bezier(0.16,1,0.3,1)] cursor-pointer flex flex-col overflow-hidden " +
                     (isActive
                       ? "bg-red-500 text-white z-10"
-                      : "border-b lg:border-b-0 lg:border-r border-white/10 bg-transparent text-white/40 hover:bg-white/5 z-0")
+                      : "border-r border-white/10 bg-transparent text-white/40 hover:bg-white/5 z-0")
                   }
                 >
                   <div className="p-6 flex items-center gap-3 relative z-10">
@@ -228,8 +303,8 @@ export default function ServicesSection() {
                     className={
                       "flex-1 px-6 pt-4 transition-all duration-[1400ms] ease-[cubic-bezier(0.16,1,0.3,1)] " +
                       (isActive
-                        ? "opacity-100 translate-y-0 delay-150 max-h-[500px] lg:max-h-none"
-                        : "opacity-0 translate-y-4 pointer-events-none max-h-0 lg:max-h-none overflow-hidden")
+                        ? "opacity-100 translate-y-0 delay-150"
+                        : "opacity-0 translate-y-4 pointer-events-none")
                     }
                   >
                     <div className="pr-4 flex flex-col h-full">
@@ -278,7 +353,7 @@ export default function ServicesSection() {
                         "text-sm tracking-[0.3em] uppercase transition-all duration-[1800ms] ease-[cubic-bezier(0.16,1,0.3,1)] origin-left " +
                         (isActive
                           ? "opacity-100 translate-x-0 rotate-0"
-                          : "opacity-0 lg:opacity-100 lg:-rotate-90 lg:absolute lg:bottom-[100px] lg:left-[30px] whitespace-nowrap")
+                          : "opacity-100 -rotate-90 absolute bottom-[100px] left-[30px] whitespace-nowrap")
                       }
                     >
                       {t(item.labelKey)}
@@ -290,7 +365,7 @@ export default function ServicesSection() {
           </div>
 
           {/* Info Panel */}
-          <div className="hidden lg:flex flex-col w-[450px] p-10 bg-black shrink-0 justify-between">
+          <div className="flex flex-col w-[450px] p-10 bg-black shrink-0 justify-between">
             <div>
               <div className="flex justify-between items-center text-xs text-white/30 mb-12 uppercase tracking-[0.3em]">
                 <span>{t("services.panel.label")}</span>

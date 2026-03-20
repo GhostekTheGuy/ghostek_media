@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { ArrowRight } from "lucide-react"
 import type { ReactNode } from "react"
 
 interface ButtonProps {
@@ -12,34 +13,32 @@ interface ButtonProps {
 }
 
 export function Button({ children, href, onClick, className = "", scroll = false }: ButtonProps) {
-  const baseClasses =
-    "relative px-6 md:px-8 py-3 border border-white text-white text-sm tracking-wider overflow-hidden group transition-colors duration-300 z-10"
-  const combinedClasses = `${baseClasses} ${className}`
-
-  const buttonContent = (
-    <>
-      <span className="absolute inset-0 bg-white transform scale-x-0 origin-left transition-transform duration-300 ease-out group-hover:scale-x-100 -z-10"></span>
-      <span className="relative z-10 group-hover:text-black transition-colors duration-300">{children}</span>
-    </>
+  const content = (
+    <div className="group flex items-center gap-4 hover:opacity-80 transition-opacity">
+      <span className="text-white text-sm tracking-wider uppercase">{children}</span>
+      <div className="w-12 h-12 rounded-full bg-red-500 flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300">
+        <ArrowRight className="w-5 h-5" />
+      </div>
+    </div>
   )
 
   if (href) {
+    const isExternal = href.startsWith("http")
     return (
       <Link
-        href={href || "https://www.instagram.com/ohhuseenaghost/"}
+        href={href}
         scroll={scroll}
-        className={`inline-block ${combinedClasses}`}
-        target="_blank"
-        rel="noopener noreferrer"
+        className={`inline-block ${className}`}
+        {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
       >
-        {buttonContent}
+        {content}
       </Link>
     )
   }
 
   return (
-    <button onClick={onClick} className={combinedClasses}>
-      {buttonContent}
+    <button onClick={onClick} className={className}>
+      {content}
     </button>
   )
 }

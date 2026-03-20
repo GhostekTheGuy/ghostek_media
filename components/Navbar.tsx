@@ -1,6 +1,5 @@
 "use client"
 
-import { MobileMenu } from "@/components/ui/mobile-menu"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
 import { useTranslation } from "react-i18next"
@@ -15,7 +14,7 @@ export default function Navbar({ className = "" }: NavbarProps) {
   const { t } = useTranslation()
 
   return (
-    <nav className={`flex justify-between items-center p-6 relative z-10 ${className}`}>
+    <nav className={`hidden md:flex justify-between items-center p-6 relative z-10 ${className}`}>
       <Link
         href="/"
         scroll={false}
@@ -24,8 +23,7 @@ export default function Navbar({ className = "" }: NavbarProps) {
         HUBERT KOLEJKO
       </Link>
 
-      {/* Desktop Navigation */}
-      <div className="hidden md:flex items-center space-x-8 text-white text-sm tracking-wider">
+      <div className="flex items-center space-x-8 text-white text-sm tracking-wider">
         <Link
           href="/#about"
           scroll={false}
@@ -59,9 +57,6 @@ export default function Navbar({ className = "" }: NavbarProps) {
 
         <LanguageSwitcher />
       </div>
-
-      {/* Mobile Menu */}
-      <MobileMenu />
     </nav>
   )
 }

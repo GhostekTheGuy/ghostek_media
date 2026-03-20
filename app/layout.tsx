@@ -9,6 +9,7 @@ import PageTransition from "@/components/ui/page-transition"
 import { MobileMenuProvider } from "@/contexts/MobileMenuContext"
 import { ProgressiveBlur } from "@/components/ui/progressive-blur"
 import { LanguageProvider } from "@/contexts/LanguageContext"
+import MobileNavbar from "@/components/MobileNavbar"
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -64,6 +65,7 @@ html {
         <PageTransition />
         <LanguageProvider>
           <MobileMenuProvider>
+            <MobileNavbar />
             <SmoothScroll>{children}</SmoothScroll>
             <ProgressiveBlur position="bottom" height="120px" className="fixed bottom-0 left-0 right-0 z-50" />
           </MobileMenuProvider>
