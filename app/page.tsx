@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useCallback, useMemo } from "react"
 import { ThreeDMarquee } from "@/components/ui/3d-marquee"
 import BlurText from "@/components/ui/blur-text"
 import { CursorTrail } from "@/components/ui/cursor-trail"
@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button"
 import Navbar from "@/components/Navbar"
 import PageTransition from "@/components/PageTransition"
 import LogoLoop from "@/components/ui/logo-loop"
+import ServicesSection from "@/components/ServicesSection"
+import CurtainIntro from "@/components/CurtainIntro"
 import { useMobileMenu } from "@/contexts/MobileMenuContext"
 import { usePageView } from "@/hooks/useAnalytics"
 import { fetchProjects } from "@/lib/projects"
@@ -23,11 +25,16 @@ const clientLogos = [
   { src: "/logos/winogrona-art.svg", alt: "Winogrona Art", title: "Winogrona Art", scale: 1.5 },
   { src: "/logos/interstalar.png", alt: "Interstalar", title: "Interstalar", scale: 0.5 },
   { src: "/logos/logo_light.png", alt: "Logo Light", title: "Logo Light", scale: 0.7 },
+  { src: "/logos/tia.svg", alt: "TIA", title: "TIA" },
+  { src: "/logos/sander.png", alt: "Sander", title: "Sander" },
 ]
 
 export default function HeroSection() {
   const { isOpen: isMobileMenuOpen } = useMobileMenu()
   const [images, setImages] = useState<string[]>([])
+  const [introComplete, setIntroComplete] = useState(false)
+
+  const handleIntroComplete = useCallback(() => setIntroComplete(true), [])
 
   usePageView("/")
 
@@ -45,7 +52,9 @@ export default function HeroSection() {
   }, [])
 
   return (
-    <PageTransition>
+    <>
+      <CurtainIntro onComplete={handleIntroComplete} />
+      <PageTransition>
       <div
         className="bg-black relative overflow-hidden font-['Space_Grotesk']"
         style={{
@@ -166,11 +175,15 @@ export default function HeroSection() {
           <AboutSection />
         </div>
 
+        {/* Services Section */}
+        <ServicesSection />
+
         {/* Footer with Text Along Path */}
         <div className="-mt-32" id="footer">
           <Footer />
         </div>
       </div>
     </PageTransition>
+    </>
   )
 }

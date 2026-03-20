@@ -37,7 +37,7 @@ export function CursorTrail({ images, className = "", containerId, fadeOutDurati
   }, [])
 
   useEffect(() => {
-    if (isMobile) return
+    if (isMobile || images.length === 0) return
 
     let rafId: number
 

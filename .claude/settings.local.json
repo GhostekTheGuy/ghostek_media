@@ -20,7 +20,14 @@
       "Bash(find /Users/ghost/Documents/GitHub/ghostek_media/public -type f \\\\\\(-iname *adobe* -o -iname *photoshop* -o -iname *illustrator* -o -iname *premiere* -o -iname *indesign* \\\\\\))",
       "Bash(find /Users/ghost/Documents/GitHub/ghostek_media -type f -name *.json -o -name *.md)",
       "Bash(find /Users/ghost/Documents/GitHub/ghostek_media/src -type f \\\\\\(-name *.tsx -o -name *.ts \\\\\\))",
-      "Bash(grep -ri SiAdobe /Users/ghost/Documents/GitHub/ghostek_media/node_modules/react-icons/ --include=*.d.ts -l)"
+      "Bash(grep -ri SiAdobe /Users/ghost/Documents/GitHub/ghostek_media/node_modules/react-icons/ --include=*.d.ts -l)",
+      "Bash(cp \"c:/Users/ghost/Downloads/logo-tia.svg\" \"G:/Obrazy/2k26/3/5zadanko brave-new/ghostek_media/public/logos/tia.svg\")",
+      "Bash(cp \"c:/Users/ghost/Downloads/72f542c24207406faee04c26ec0908ad-logo-sander.png\" \"G:/Obrazy/2k26/3/5zadanko brave-new/ghostek_media/public/logos/sander.png\")",
+      "Bash(npx next:*)",
+      "Bash(npx tsc:*)",
+      "Bash(xxd components/ServicesSection.tsx)",
+      "Bash(npm install:*)",
+      "Bash(node --input-type=module -e \"import * as m from ''@hugeicons/core-free-icons''; const names = Object.keys\\(m\\).filter\\(k => /code|web|dev|browser/i.test\\(k\\)\\).slice\\(0,20\\); console.log\\(names.join\\(''\\\\n''\\)\\)\")"
     ]
   }
 }
