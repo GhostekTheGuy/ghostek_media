@@ -80,9 +80,9 @@ export function MobileMenu({ className }: MobileMenuProps) {
                     aria-label="Toggle language"
                   >
                     {i18n.language === "en" ? (
-                      <FlagPL className="w-9 h-6 rounded-[3px]" />
+                      <FlagPL className="w-9 h-6" />
                     ) : (
-                      <FlagEN className="w-9 h-6 rounded-[3px]" />
+                      <FlagEN className="w-9 h-6" />
                     )}
                   </motion.button>
                 </nav>

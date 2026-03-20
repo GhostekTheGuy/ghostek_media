@@ -28,19 +28,6 @@ export default function Navbar({ className = "" }: NavbarProps) {
         HUBERT KOLEJKO
       </Link>
 
-      {/* Center Language Switcher */}
-      <button
-        onClick={toggleLanguage}
-        className="absolute left-1/2 -translate-x-1/2 cursor-pointer transition-all duration-300 hover:scale-125 hover:drop-shadow-[0_0_8px_rgba(239,68,68,0.5)] hidden md:block"
-        aria-label="Toggle language"
-      >
-        {i18n.language === "en" ? (
-          <FlagPL className="w-7 h-5 rounded-[3px]" />
-        ) : (
-          <FlagEN className="w-7 h-5 rounded-[3px]" />
-        )}
-      </button>
-
       {/* Desktop Navigation */}
       <div className="hidden md:flex items-center space-x-8 text-white text-sm tracking-wider">
         <Link
@@ -73,6 +60,19 @@ export default function Navbar({ className = "" }: NavbarProps) {
           {t("nav.contact")}
           <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-500 transition-all duration-300 group-hover:w-full"></span>
         </Link>
+
+        {/* Language Switcher */}
+        <button
+          onClick={toggleLanguage}
+          className="cursor-pointer transition-all duration-300 hover:scale-110 hover:drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]"
+          aria-label="Toggle language"
+        >
+          {i18n.language === "en" ? (
+            <FlagPL className="w-6 h-4" />
+          ) : (
+            <FlagEN className="w-6 h-4" />
+          )}
+        </button>
       </div>
 
       {/* Mobile Menu */}
